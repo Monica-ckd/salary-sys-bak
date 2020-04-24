@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.MeetRoomInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.MeetRoomInfo">
+        <id column="id" property="id" />
+        <result column="room_name" property="roomName" />
+        <result column="locate" property="locate" />
+        <result column="capacity" property="capacity" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="remark" property="remark" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, room_name, locate, capacity, create_by, create_time, remark, last_update_by, last_update_time, del_flag
+    </sql>
+
+
+    <!--    selectAll-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from meet_room_info
+        where 1=1;
+    </select>
+
+</mapper>

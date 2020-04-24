@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.PostChangeInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.PostChangeInfo">
+        <id column="id" property="id" />
+        <result column="group" property="group" />
+        <result column="name" property="name" />
+        <result column="machineno" property="machineno" />
+        <result column="wid" property="wid" />
+        <result column="mode" property="mode" />
+        <result column="bpid" property="bpid" />
+        <result column="position" property="position" />
+        <result column="s_time" property="sTime" />
+        <result column="e_time" property="eTime" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="check_state" property="checkState" />
+        <result column="abnmal_state" property="abnmalState" />
+        <result column="parent_id" property="parentId" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,`name`, `group`, machineno, wid, bpid, s_time, e_time,create_time, create_by, check_state, abnmal_state, parent_id, last_update_by, last_update_time, del_flag, comment
+    </sql>
+
+    <sql id="Join_Column_List">
+        pci.id,pci.`name`, pci.`group`, pci.machineno, pci.wid, wmd.mode, pci.bpid, bp.position, pci.s_time, pci.e_time, pci.create_time, pci.create_by, pci.check_state, pci.abnmal_state, pci.parent_id, pci.last_update_by, pci.last_update_time, pci.del_flag, pci.comment
+    </sql>
+<!-- findPostChange-->
+    <select id="findPostChange" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        FROM
+        (post_change_info pci
+        LEFT JOIN workmodes wmd ON pci.wid = wmd.id)
+        LEFT JOIN basic_position bp ON pci.bpid = bp.id
+        WHERE
+        pci.name = #{name,jdbcType=VARCHAR}
+        AND pci.check_state = '0'
+        AND pci.abnmal_state = '0'
+        AND pci.parent_id = '0';
+    </select>
+<!--    findPostOrders-->
+    <select id="findPostOrders" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        FROM
+        (post_change_info pci
+        LEFT JOIN workmodes wmd ON pci.wid = wmd.id)
+        LEFT JOIN basic_position bp ON pci.bpid = bp.id
+        WHERE 1=1
+        AND pci.create_by = #{name,jdbcType=VARCHAR}
+        AND pci.check_state = '0'
+        AND pci.abnmal_state = '-1'
+        AND pci.parent_id != '0';
+    </select>
+
+<!--    findPostChangeByFilter -->
+    <select id="findPostChangeByFilter" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from post_change_info pci
+        where 1=1
+        <if test="name != null" >
+            AND
+            pci.name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime != null">
+            AND
+            pci.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        and pci.abnmal_state='0'
+        and pci.parent_id ='0';
+    </select>
+<!--    insertSelective-->
+    <insert id="insertSelective" parameterType="com.gxzy.salary.basic.model.PostChangeInfo">
+        insert into post_change_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+            `name`,
+            </if>
+            <if test="group != null">
+                `group`,
+            </if>
+            <if test="machineno != null">
+                machineno,
+            </if>
+            <if test="wid != null">
+                wid,
+            </if>
+            <if test="bpid != null">
+                bpid,
+            </if>
+            <if test="sTime != null">
+                s_time,
+            </if>
+            <if test="eTime != null">
+                e_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="checkState != null">
+                check_state,
+            </if>
+            <if test="abnmalState != null">
+                abnmal_state,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by,
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                #{group,jdbcType=VARCHAR},
+            </if>
+            <if test="machineno != null">
+                #{machineno,jdbcType=VARCHAR},
+            </if>
+            <if test="wid != null">
+                #{wid,jdbcType=BIGINT},
+            </if>
+            <if test="bpid != null">
+                #{bpid,jdbcType=VARCHAR},
+            </if>
+            <if test="sTime != null">
+                #{sTime,jdbcType=VARCHAR},
+            </if>
+            <if test="eTime != null">
+                #{eTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=TIMESTAMP},
+            </if>
+            <if test="checkState != null">
+                #{checkState,jdbcType=BIGINT},
+            </if>
+            <if test="abnmalState != null">
+                #{abnmalState,jdbcType=TIMESTAMP},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=TINYINT},
+            </if>
+            <if test="lastUpdateBy != null">
+                #{lastUpdateBy,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=TINYINT},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+<!--    updateByPrimaryKeySelective-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.gxzy.salary.basic.model.PostChangeInfo">
+        update post_change_info
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                `group` = #{group,jdbcType=VARCHAR},
+            </if>
+            <if test="machineno != null">
+                machineno = #{machineno,jdbcType=VARCHAR},
+            </if>
+            <if test="wid != null">
+                wid =  #{wid,jdbcType=BIGINT},
+            </if>
+            <if test="bpid != null">
+                bpid = #{bpid,jdbcType=VARCHAR},
+            </if>
+            <if test="sTime != null">
+                s_time = #{sTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eTime != null">
+                e_time = #{eTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="checkState != null">
+                check_state = #{checkState,jdbcType=TINYINT},
+            </if>
+            <if test="abnmalState != null">
+                abnmal_state = #{abnmalState,jdbcType=TINYINT},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=TINYINT},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+<!--    updateAbnmalState-->
+    <update id="updateAbnmalState" parameterType="com.gxzy.salary.basic.model.PostChangeInfo">
+        update post_change_info pci
+        <set>
+            pci.abnmal_state = '-1'
+        </set>
+        where pci.id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

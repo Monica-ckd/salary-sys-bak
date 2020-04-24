@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.book.dao.ReserveInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.book.model.ReserveInfo">
+        <id column="id" property="id" />
+        <result column="topic" property="topic" />
+        <result column="date_no" property="dateNo" />
+        <result column="date_no" property="date" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="present_emp" property="presentEmp" />
+        <result column="create_user" property="createUser" />
+        <result column="telephone" property="telephone" />
+        <result column="room_id" property="roomId" />
+        <result column="create_time" property="createTime" />
+        <result column="remark" property="remark" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, topic, date_no, start_time, end_time, present_emp, create_user, telephone, room_id, create_time, remark, last_update_by, last_update_time, del_flag
+    </sql>
+
+
+    <!--    selectAll-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from reserve_info
+        where 1=1;
+    </select>
+
+    <!--    selectByDate-->
+    <select id="selectByDate" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from reserve_info
+        where 1=1
+        and date_no = #{filterTime,jdbcType=DATE}
+    </select>
+
+<!--    selectByRoomAndWeek-->
+    <select id="selectByRoomAndWeek" parameterType="com.gxzy.salary.book.service.vo.ReserveFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from reserve_info
+        where 1=1
+        and room_id = #{roomId,jdbcType=BIGINT}
+        and date_no between #{startDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+    </select>
+
+<!--    checkReserveTime  查询预约时间段是否空闲校验-->
+    <select id="checkReserveTime" parameterType="com.gxzy.salary.book.service.vo.ReserveFilterVo" resultType="java.lang.Integer">
+    select
+    COUNT(*)
+    from reserve_info
+    where
+    room_id =  #{roomId,jdbcType=BIGINT}
+    and date_no = #{dateNo,jdbcType=DATE}
+    and
+    (start_time between #{startTime,jdbcType=TIME} and #{endTime,jdbcType=TIME}
+    or end_time between #{startTime,jdbcType=TIME} and #{endTime,jdbcType=TIME}
+    or #{startTime,jdbcType=TIME} between start_time and end_time
+    or #{endTime,jdbcType=TIME} between start_time and end_time)
+</select>
+
+<!--    selectByName-->
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from reserve_info
+        where 1=1
+        and create_user = #{name,jdbcType=VARCHAR}
+    </select>
+
+<!--    selectByPrimaryKey-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from reserve_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <!--insert -->
+    <insert id="insert" parameterType="com.gxzy.salary.book.model.ReserveInfo">
+        insert into reserve_info (`topic`, `date_no`, `start_time`, `end_time`,`create_user`, `telephone`, `room_id`, `create_time`, `remark`)
+        values
+        (#{topic,jdbcType=VARCHAR},
+        #{dateNo,jdbcType=DATE},
+        #{startTime,jdbcType=TIME},
+        #{endTime,jdbcType=TIME},
+        #{createUser,jdbcType=VARCHAR},
+        #{telephone,jdbcType=VARCHAR},
+        #{roomId,jdbcType=BIGINT},
+        #{createTime,jdbcType=DATE},
+        #{remark,jdbcType=VARCHAR})
+   </insert>
+<!-- deleteByPrimaryKey -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from reserve_info
+    where id = #{id,jdbcType=BIGINT}
+</delete>
+
+<!--    updateByPrimaryKeySelective-->
+<update id="updateByPrimaryKeySelective" parameterType="com.gxzy.salary.book.model.ReserveInfo">
+    update reserve_info
+    <set>
+        <if test="topic != null">
+            topic = #{topic,jdbcType=VARCHAR},
+        </if>
+        <if test="createUser != null">
+            create_user = #{createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="telephone != null">
+            telephone = #{telephone,jdbcType=VARCHAR},
+        </if>
+        <if test="roomId != null">
+            room_id = #{roomId,jdbcType=BIGINT},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=DATE},
+        </if>
+        <if test="remark != null">
+            remark = #{remark,jdbcType=VARCHAR},
+        </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+</update>
+
+
+
+
+
+
+</mapper>

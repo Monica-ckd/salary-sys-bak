@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.BrandsRegamtMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.BrandsRegamt">
+        <id column="id" property="id" />
+        <result column="brand" property="brand" />
+        <result column="mid" property="mid" />
+        <result column="machineno" property="machineno" />
+        <result column="b_type" property="bType" />
+        <result column="reg_amt" property="regAmt" />
+        <result column="category" property="category" />
+        <result column="comment" property="comment" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, brand, mid, b_type, reg_amt,category ,comment, create_time, last_update_by, last_update_time, del_flag
+    </sql>
+    <!-- 查询结果列 -->
+    <sql id="Join_Column_List">
+        br.id, br.brand, br.mid,ms.machineno,br.b_type, br.reg_amt,br.category ,br.comment, br.create_time, br.last_update_by, br.last_update_time, br.del_flag
+    </sql>
+
+<!--    selectAll-->
+    <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Join_Column_List" />
+        from brands_regamt br left join machines ms on br.mid = ms.id
+        where category = #{category,jdbcType=TINYINT}
+    </select>
+
+
+    <!--    findByFilter filter.mid + filter.brand-->
+    <select id="findByFilter" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from brands_regamt br
+    where 1=1
+    <if test="mid != null" >
+        AND
+        br.mid = #{mid,jdbcType=BIGINT}
+    </if>
+    <if test="brand != null">
+        AND
+        br.brand = #{brand,jdbcType=VARCHAR};
+    </if>
+</select>
+
+<!--    findByBrand -->
+    <select id="findByBrand" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from brands_regamt br
+        where br.brand = #{brand,jdbcType=VARCHAR};
+    </select>
+
+    <!--    findByMid -->
+    <select id="findByMid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from brands_regamt br
+        where br.mid = #{mid,jdbcType=BIGINT};
+    </select>
+
+<!--    insertSelective-->
+    <insert id="insertSelective" parameterType="com.gxzy.salary.basic.model.BrandsRegamt">
+        insert into brands_regamt
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="brand != null">
+                brand,
+            </if>
+            <if test="mid != null">
+                mid,
+            </if>
+            <if test="bType != null">
+                b_type,
+            </if>
+            <if test="regAmt != null">
+                reg_amt,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by,
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="mid != null">
+                #{mid,jdbcType=BIGINT},
+            </if>
+            <if test="bType != null">
+                #{bType,jdbcType=VARCHAR},
+            </if>
+            <if test="regAmt != null">
+                #{regAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="category != null">
+                #{category,jdbcType=TINYINT},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateBy != null">
+                #{lastUpdateBy,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+<!--    updateByPrimaryKeySelective-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.gxzy.salary.basic.model.BrandsRegamt">
+        update brands_regamt
+        <set>
+            <if test="brand != null">
+                brand = #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="mid != null">
+                mid = #{mid,jdbcType=BIGINT},
+            </if>
+            <if test="bType != null">
+                b_type = #{bType,jdbcType=VARCHAR},
+            </if>
+            <if test="regAmt != null">
+                reg_amt = #{regAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=TINYINT},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by = #{lastUpdateBy,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+<!--    deleteByPrimaryKey-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from brands_regamt
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.CigOutputInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.CigOutputInfo">
+        <id column="ID" property="id" />
+        <result column="gid" property="gid" />
+        <result column="GROUP" property="group" />
+        <result column="machineno" property="machineno" />
+        <result column="BRAND" property="brand" />
+        <result column="prd_amt" property="prdAmt" />
+        <result column="inc_amt" property="incAmt" />
+        <result column="reason" property="reason" />
+        <result column="total" property="total" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+         ID, `GROUP`, MACHINENO, BRAND, prd_amt, inc_amt, reason, total, create_time, last_update_by, last_update_time, del_flag, `comment`
+    </sql>
+
+    <sql id="Join_Column_List">
+        coi.ID, gs.id as gid, coi.`GROUP`, coi.MACHINENO, coi.BRAND, coi.prd_amt, coi.inc_amt, coi.reason, coi.total, coi.create_time, coi.last_update_by, coi.last_update_time, coi.del_flag, coi.`comment`
+    </sql>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into cig_output_info(`GROUP`, MACHINENO,BRAND, prd_amt, inc_amt, reason, total, create_time, last_update_by, last_update_time, del_flag, `comment`) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.group, jdbcType=VARCHAR},
+             #{item.machineno, jdbcType=VARCHAR},
+             #{item.brand, jdbcType=VARCHAR},
+             #{item.prdAmt, jdbcType=DECIMAL},
+             #{item.incAmt, jdbcType=DECIMAL},
+             #{item.reason, jdbcType=VARCHAR},
+             #{item.total, jdbcType=DECIMAL},
+             #{item.createTime,jdbcType=TIMESTAMP},
+             #{item.lastUpdateBy,jdbcType=VARCHAR},
+             #{item.lastUpdateTime,jdbcType=TIMESTAMP},
+             #{item.delFlag,jdbcType=TINYINT},
+            #{item.comment, jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cig_output_info where  1=1
+    </select>
+
+    <select id="findByTime" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Join_Column_List" />
+        from cig_output_info coi
+        LEFT JOIN `groups` gs on coi.group = gs.group
+        where  1=1
+        and coi.create_time =  #{dayTime,jdbcType=VARCHAR};
+    </select>
+
+    <!--    deleteByCreateTime-->
+    <delete id="deleteByCreateTime" parameterType="java.lang.String">
+        delete from cig_output_info
+        where create_time = #{createTime,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

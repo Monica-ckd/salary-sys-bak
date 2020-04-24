@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.DutyExceptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.DutyExcept">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="group" property="group" />
+        <result column="abs_id" property="absId" />
+        <result column="abs_desc" property="absDesc" />
+        <result column="sTime" property="sTime" />
+        <result column="eTime" property="eTime" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="check_state" property="checkState" />
+        <result column="abnmal_state" property="abnmalState" />
+        <result column="parent_id" property="parentId" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, `name`, `group`, abs_id, sTime, eTime, create_time, create_by, check_state, abnmal_state, parent_id, last_update_by, last_update_time, del_flag, comment
+    </sql>
+
+    <!-- join查询结果列 -->
+    <sql id="Join_Column_List">
+        de.id, de.`name`, de.`group`, de.abs_id, ai.abs_desc, de.sTime, de.eTime, de.create_time, de.create_by, de.check_state, de.abnmal_state, de.parent_id, de.last_update_by, de.last_update_time, de.del_flag, de.comment
+    </sql>
+
+<!--    findDutyExcept -->
+    <select id="findDutyExcept" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        from duty_except de
+        LEFT JOIN absence_info ai ON de.abs_id = ai.id
+        WHERE
+        de.name = #{name,jdbcType=VARCHAR}
+        AND de.check_state = '0'
+        AND de.abnmal_state = '0'
+        AND de.parent_id = '0';
+    </select>
+
+<!--    findDutyOrders-->
+    <select id="findDutyOrders" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        from duty_except de
+        LEFT JOIN absence_info ai ON de.abs_id = ai.id
+        WHERE
+        de.create_by = #{name,jdbcType=VARCHAR}
+        AND de.check_state = '0'
+        AND de.abnmal_state = '-1'
+        AND de.parent_id != '0';
+    </select>
+
+<!--    insertSelective-->
+
+    <insert id="insertSelective" parameterType="com.gxzy.salary.basic.model.DutyExcept">
+        insert into duty_except
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="group != null">
+                `group`,
+            </if>
+            <if test="absId != null">
+                abs_id,
+            </if>
+            <if test="sTime != null">
+                sTime,
+            </if>
+            <if test="eTime != null">
+                eTime,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="checkState != null">
+                check_state,
+            </if>
+            <if test="abnmalState != null">
+                abnmal_state,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by,
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                #{group,jdbcType=BIGINT},
+            </if>
+            <if test="absId != null">
+                #{absId,jdbcType=VARCHAR},
+            </if>
+            <if test="sTime != null">
+                #{sTime,jdbcType=VARCHAR},
+            </if>
+            <if test="eTime != null">
+                #{eTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=TIMESTAMP},
+            </if>
+            <if test="checkState != null">
+            #{checkState,jdbcType=BIGINT},
+            </if>
+            <if test="abnmalState != null">
+                #{abnmalState,jdbcType=TIMESTAMP},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=TINYINT},
+            </if>
+            <if test="lastUpdateBy != null">
+                #{lastUpdateBy,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+<!--    updateByPrimaryKeySelective -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.gxzy.salary.basic.model.DutyExcept">
+        update duty_except
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                `group` = #{group,jdbcType=VARCHAR},
+            </if>
+            <if test="absId != null">
+                abs_id = #{absId,jdbcType=BIGINT},
+            </if>
+            <if test="sTime != null">
+                sTime = #{sTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eTime != null">
+                eTime = #{eTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="checkState != null">
+                check_state = #{checkState,jdbcType=TINYINT},
+            </if>
+            <if test="abnmalState != null">
+                abnmal_state = #{abnmalState,jdbcType=TINYINT},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=TINYINT},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

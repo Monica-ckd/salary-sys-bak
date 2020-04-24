@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.EmpBasicInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.EmpBasicInfo">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="eno" property="eno" />
+        <result column="bouns_ratio" property="bounsRatio" />
+        <result column="pid" property="pid" />
+        <result column="bpid" property="bpid" />
+        <result column="position" property="position" />
+        <result column="wid" property="wid" />
+        <result column="mode" property="mode" />
+        <result column="group" property="group" />
+        <result column="mid" property="mid" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+
+    <sql id="Base_Column_List">
+        id, `name`, pid,  wid, `group`, mid, create_time, last_update_by, last_update_time, del_flag, comment
+    </sql>
+
+    <!--   方便前端 "name": "韩梅梅","position": "卷接挡车工", "mode":"两班倒"-->
+    <sql id="Join_Column_List">
+        ebi.id, ebi.`name`, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, wm.mode,ebi.`group`, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
+    </sql>
+
+<!--    // 查询员工岗位信息-->
+<!--    //    "eno": "111110","eName": "韩梅梅","position": "卷接挡车工","group":"甲", "mid":"2","bounsRatio": "0.55"-->
+    <sql id="Join_Empinfo_Column_List">
+        ebi.id, ebi.`name`,su.eno, epi.bouns_ratio, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, ebi.`group`, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
+    </sql>
+
+<!-- 查询全部-->
+    <select id="selectAll"  resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from emp_basic_info ebi
+        WHERE 1=1;
+    </select>
+
+<!--   findByName-->
+    <select id="findByName" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from emp_basic_info ebi
+        WHERE
+        ebi.name = #{name,jdbcType=VARCHAR};
+    </select>
+
+
+<!--    findEmpByName查询员工个人信息 -->
+    <select id="findEmpByName" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Join_Empinfo_Column_List" />
+        FROM
+        emp_basic_info ebi
+        left join emp_post_info epi on ebi.pid = epi.id
+        left join basic_position bp on epi.bpid = bp.id
+        LEFT JOIN sys_user su ON ebi.NAME = su.NAME
+        WHERE 1 = 1
+        AND ebi.name = #{name,jdbcType=VARCHAR}
+        AND ebi.create_time = #{createTime,jdbcType=VARCHAR}
+    </select>
+<!--  findForPull  查询所有操作工post_type= '0';-->
+    <select id="findForPull" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Join_Column_List" />
+        FROM
+        emp_basic_info ebi
+        left join emp_post_info epi on ebi.pid = epi.id
+        left join basic_position bp on epi.bpid = bp.id
+        left join workmodes wm on ebi.wid = wm.id
+        WHERE
+        1 = 1
+        AND ebi.create_time = #{monthTime,jdbcType=TIMESTAMP}
+        and bp.post_type= '0'
+        or bp.post_type= '1';
+    </select>
+
+
+<!--    selectByCondition-->
+    <select id="selectByCondition" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from emp_basic_info ebi
+        where 1=1
+        <if test="name != null" >
+            AND
+            ebi.name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime != null">
+            AND
+            ebi.create_time = #{monthTime,jdbcType=TIMESTAMP};
+        </if>
+    </select>
+
+<!--    findByCondition-->
+    <select id="findByCondition" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from emp_basic_info ebi
+        where 1=1
+        <if test="name != null" >
+            AND
+            ebi.name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime != null">
+            AND
+            ebi.create_time = #{monthTime,jdbcType=TIMESTAMP};
+        </if>
+    </select>
+
+</mapper>

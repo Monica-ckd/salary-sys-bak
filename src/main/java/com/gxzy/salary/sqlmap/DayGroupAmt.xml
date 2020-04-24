@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.DayGroupAmtMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.DayGroupAmt">
+        <id column="id" property="id" />
+        <result column="group" property="group" />
+        <result column="machines" property="machines" />
+        <result column="group_amt" property="groupAmt" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, `group`, machines, group_amt, create_time, last_update_by, last_update_time, del_flag, comment
+    </sql>
+
+<!--    insert-->
+    <insert id="insert" parameterType="com.gxzy.salary.basic.model.DayGroupAmt">
+        INSERT INTO day_group_amt ( `group`, `machines`,`group_amt`,`create_time` )
+        VALUES(
+            #{group,jdbcType=VARCHAR},
+            #{machines,jdbcType=TINYINT},
+            #{groupAmt,jdbcType=DECIMAL},
+             #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+<!--    deleteByTime-->
+    <delete id="deleteByTime" parameterType="java.lang.String">
+        delete from day_group_amt
+        where create_time = #{createTime,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

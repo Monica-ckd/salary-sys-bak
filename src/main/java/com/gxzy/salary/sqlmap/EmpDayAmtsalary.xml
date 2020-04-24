@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.EmpDayAmtsalaryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.EmpDayAmtsalary">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="group" property="group" />
+        <result column="mid" property="mid" />
+        <result column="machineno" property="machineno" />
+        <result column="brand" property="brand" />
+        <result column="total_amt" property="totalAmt" />
+        <result column="group_amt" property="groupAmt" />
+        <result column="amt_salary" property="amtSalary" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, `name`, `group`, mid, brand, total_amt, amt_salary, create_time, last_update_by, last_update_time, del_flag, comment
+    </sql>
+
+    <sql id="Join_Column_List">
+        eda.id, eda.`name`, eda.`group`, eda.mid, ms.machineno, dga.group_amt, eda.brand, eda.total_amt, eda.amt_salary, eda.create_time, eda.last_update_by, eda.last_update_time, eda.del_flag, eda.comment
+    </sql>
+
+<!-- 个人名下按照时间段查询【sTime<= createTime <=eTime】 findByPeriod-->
+    <select id="findByPeriod" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Join_Column_List" />
+        from emp_day_amtsalary eda
+        left join day_group_amt dga on (eda.group=dga.group and eda.create_time = dga.create_time)
+        left join machines ms on eda.mid= ms.id
+        where 1=1
+        <if test="name != null">
+            AND
+            eda.name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="sTime != null">
+            AND
+            eda.create_time &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null">
+            AND
+            eda.create_time &lt;= #{eTime,jdbcType=TIMESTAMP};
+        </if>
+    </select>
+
+<!--    insert-->
+    <insert id="insert" parameterType="com.gxzy.salary.basic.model.EmpDayAmtsalary">
+        INSERT INTO emp_day_amtsalary ( `name`, `group`, `mid`, `brand`, `total_amt`, `amt_salary`, `create_time` )
+        VALUES(
+            #{name,jdbcType=VARCHAR},
+            #{group,jdbcType=VARCHAR},
+            #{mid,jdbcType=BIGINT},
+            #{brand,jdbcType=VARCHAR},
+            #{totalAmt,jdbcType=DECIMAL},
+            #{amtSalary,jdbcType=DECIMAL},
+             #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+
+<!--    deleteByCreateTime-->
+    <delete id="deleteByCreateTime" parameterType="java.lang.String">
+        delete from emp_day_amtsalary
+        where create_time = #{createTime,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

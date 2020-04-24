@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.basic.dao.WorktimeinfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.Worktimeinfo">
+        <id column="id" property="id" />
+        <result column="group" property="group" />
+        <result column="workDays" property="workDays" />
+        <result column="pointVal" property="pointVal" />
+        <result column="month_date" property="monthDate" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, `group`, workDays, pointVal, month_date, create_time, last_update_by, last_update_time, del_flag, `comment`
+    </sql>
+
+    <select id="selectLast" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from worktimeinfo wt order by wt.month_date desc,wt.`id` LIMIT 8;
+    </select>
+
+    <select id="findByMonth" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from worktimeinfo wt where wt.month_date = #{monthDate,jdbcType=VARCHAR}
+    </select>
+
+<!--    findByFilter-->
+    <select id="findByFilter" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from worktimeinfo wt
+        where 1=1
+        <if test="group != null">
+            AND `group` = #{group,jdbcType=VARCHAR}
+        </if>
+        <if test="monthTime != null">
+            AND
+            wt.month_date = #{monthTime,jdbcType=VARCHAR};
+        </if>
+    </select>
+
+
+    <!--    deleteBatchByMonth-->
+    <delete id="deleteBatchByMonth" parameterType="java.lang.String">
+        delete from worktimeinfo
+        where month_date = #{monthDate,jdbcType=VARCHAR};
+    </delete>
+
+
+<!--    insert-->
+    <insert id="insert" parameterType="com.gxzy.salary.basic.model.Worktimeinfo">
+    insert into worktimeinfo(`group`, `workDays`, `pointVal`, `month_date`,
+        `create_time`)values
+        (#{group,jdbcType=VARCHAR},
+        #{workDays,jdbcType=DECIMAL},
+        #{pointVal,jdbcType=DECIMAL},
+        #{monthDate,jdbcType=TIMESTAMP},
+        #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into worktimeinfo(`group`, `workDays`, `pointVal`, `month_date`,
+        `create_time`) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.group, jdbcType=VARCHAR},
+            #{item.workDays, jdbcType=DECIMAL},
+            #{item.pointVal, jdbcType=DECIMAL},
+            #{item.monthDate, jdbcType=TIMESTAMP},
+            #{item.createTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+
+</mapper>
