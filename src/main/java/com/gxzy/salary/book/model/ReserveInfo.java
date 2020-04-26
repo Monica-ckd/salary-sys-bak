@@ -76,6 +76,11 @@ public class ReserveInfo extends Model<ReserveInfo> {
     private Long roomId;
 
     /**
+     * 会议室名称
+     */
+    private String roomName;
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -141,12 +146,14 @@ public class ReserveInfo extends Model<ReserveInfo> {
                 "id=" + id +
                 ", topic='" + topic + '\'' +
                 ", dateNo='" + dateNo + '\'' +
+                ", date='" + date + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", presentEmp='" + presentEmp + '\'' +
                 ", createUser='" + createUser + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", roomId=" + roomId +
+                ", roomName='" + roomName + '\'' +
                 ", createTime='" + createTime + '\'' +
                 ", remark='" + remark + '\'' +
                 ", lastUpdateBy='" + lastUpdateBy + '\'' +

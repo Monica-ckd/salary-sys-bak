@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -116,8 +117,19 @@ public class ReserveInfoServiceImpl  implements ReserveInfoService {
      */
     @Override
     public List<ReserveInfo> findByName(String name) {
+        String[] roomArr = {"","卷包车间党员之家","卷包车间会议室","卷包车间二楼大师工作室"};
         logger.info("findByName"+name);
-        return reserveInfoMapper.selectByName(name);
+        List<ReserveInfo> reserveInfos = reserveInfoMapper.selectByName(name);
+        if(reserveInfos != null && reserveInfos.size()>0)
+        {
+            for (int i = 0; i <reserveInfos.size() ; i++) {
+                ReserveInfo item = reserveInfos.get(i);
+                reserveInfos.get(i).setRoomName(roomArr[item.getRoomId().intValue()]);
+                logger.info(item.toString());
+            }
+
+        }
+        return reserveInfos;
     }
 
     /**
@@ -147,8 +159,6 @@ public class ReserveInfoServiceImpl  implements ReserveInfoService {
      */
     @Override
     public int delByIdAndTime(long id) {
-
-
         // 检查是有效删除时间
         boolean isValidTime = isValidTime(id);
         if(isValidTime)
@@ -162,7 +172,6 @@ public class ReserveInfoServiceImpl  implements ReserveInfoService {
             {
                 return 0; // 删除失败
             }
-
         }
         return -1; // 超过可删除时间
     }
@@ -181,7 +190,7 @@ public class ReserveInfoServiceImpl  implements ReserveInfoService {
         Date startDate = new Date();
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
-        start.add(Calendar.HOUR,-2);
+        start.add(Calendar.HOUR,-1);
         Date beforeTwoHour = start.getTime();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

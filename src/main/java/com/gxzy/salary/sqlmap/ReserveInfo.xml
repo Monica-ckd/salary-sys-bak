@@ -75,6 +75,15 @@
         <include refid="Base_Column_List" />
         from reserve_info
         where 1=1
+        and last_update_by = #{name,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from reserve_info
+        where 1=1
         and create_user = #{name,jdbcType=VARCHAR}
     </select>
 
@@ -89,13 +98,14 @@
 
     <!--insert -->
     <insert id="insert" parameterType="com.gxzy.salary.book.model.ReserveInfo">
-        insert into reserve_info (`topic`, `date_no`, `start_time`, `end_time`,`create_user`, `telephone`, `room_id`, `create_time`, `remark`)
+        insert into reserve_info (`topic`, `date_no`, `start_time`, `end_time`,`create_user`,`last_update_by`, `telephone`, `room_id`, `create_time`, `remark`)
         values
         (#{topic,jdbcType=VARCHAR},
         #{dateNo,jdbcType=DATE},
         #{startTime,jdbcType=TIME},
         #{endTime,jdbcType=TIME},
         #{createUser,jdbcType=VARCHAR},
+        #{lastUpdateBy,jdbcType=VARCHAR},
         #{telephone,jdbcType=VARCHAR},
         #{roomId,jdbcType=BIGINT},
         #{createTime,jdbcType=DATE},
