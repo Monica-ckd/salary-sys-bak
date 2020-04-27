@@ -35,8 +35,7 @@ public class ReserveInfoServiceImpl  implements ReserveInfoService {
 
     @Autowired
     private ReserveInfoMapper reserveInfoMapper;
-    @Autowired
-    private RoomUseInfosMapper roomUseInfosMapper;
+
     @Override
     public int save(ReserveInfo record) {
         return 0;
