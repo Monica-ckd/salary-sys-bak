@@ -20,20 +20,21 @@ import java.util.Map;
 public class MabatisPlusGenerator {
 
     //生成文件所在项目路径
+    private static String baseProjectPath = "C:\\codeing\\javaproject\\salary-sys-bak";
 //    private static String baseProjectPath = "C:\\Users\\prett\\IdeaProjects\\salary-sys";
-    private static String baseProjectPath = "C:\\Users\\prett\\IdeaProjects\\myexam-sys";
+//    private static String baseProjectPath = "C:\\Users\\prett\\IdeaProjects\\myexam-sys";
     //基本包名
-    private static String basePackage="com.gxzy.exam.paper";
+    private static String basePackage="com.gxzy.salary.points";
     //作者
     private static String authorName="chenkaidi";
     //要生成的表名
-    private static String[] tables= {"tag_question"};
+    private static String[] tables= {"point_record"};
     //table前缀
     private static String prefix="";
 
     //数据库配置四要素
     private static String driverName = "com.mysql.jdbc.Driver";
-    private static String url = "jdbc:mysql://localhost:3306/cexam?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=utf-8";
+    private static String url = "jdbc:mysql://localhost:3306/salary?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=utf-8";
     private static String username = "root";
     private static String password = "123456";
 
@@ -91,9 +92,9 @@ public class MabatisPlusGenerator {
                         //.setSuperEntityColumns(new String[]{"test_id"})
                         //.setTableFillList(tableFillList)
                         // 自定义 mapper 父类 默认BaseMapper
-                        .setSuperMapperClass("com.gxzy.exam.interfaces.BasicMapper")
+                        .setSuperMapperClass("com.gxzy.salary.intface.BasicMapper")
                         // 自定义 service 父类 默认IService
-                         .setSuperServiceClass("com.gxzy.exam.interfaces.CurdService")
+                         .setSuperServiceClass("com.gxzy.salary.intface.CurdService")
                         // 自定义 service 实现类父类 默认ServiceImpl
                         // .setSuperServiceImplClass("com.baomidou.demo.TestServiceImpl")
                         // 自定义 controller 父类

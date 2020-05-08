@@ -45,6 +45,17 @@
         AND de.parent_id = '0';
     </select>
 
+
+<!--    selectByPrimaryKey-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        from duty_except de
+        LEFT JOIN absence_info ai ON de.abs_id = ai.id
+        WHERE
+        de.id = #{id,jdbcType=BIGINT}
+    </select>
+
 <!--    findDutyOrders-->
     <select id="findDutyOrders" parameterType="java.lang.String" resultMap="BaseResultMap" >
         select

@@ -2,6 +2,8 @@ package com.gxzy.salary.basic.dao;
 
 import com.gxzy.salary.basic.model.Groups;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gxzy.salary.intface.BasicMapper;
+import org.apache.poi.ss.formula.functions.T;
 
 /**
  * <p>
@@ -11,6 +13,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author chenkaidi
  * @since 2019-08-16
  */
-public interface GroupsMapper extends BaseMapper<Groups> {
+public interface GroupsMapper extends BasicMapper<Groups> {
 
 }

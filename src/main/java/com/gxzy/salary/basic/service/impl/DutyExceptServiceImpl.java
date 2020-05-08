@@ -63,9 +63,11 @@ public class DutyExceptServiceImpl implements DutyExceptService {
         logger.info("askUpdateDuty service****"+record);
 
         // 原数据设置异常 abnmalState = -1
+        // 查找原数据
+        DutyExcept oldRecord = dutyExceptMapper.selectByPrimaryKey(record.getId());
+        oldRecord = buildRecord(oldRecord,0,-1,0);
+        dutyExceptMapper.updateByPrimaryKeySelective(oldRecord);
         record = buildRecord(record,0,-1,0);
-        dutyExceptMapper.updateByPrimaryKeySelective(record);
-
         // 新增考勤修正申请
         record.setParentId(record.getId());
         record.setId(null);
@@ -94,7 +96,6 @@ public class DutyExceptServiceImpl implements DutyExceptService {
     @Transactional(readOnly=false,rollbackFor=Exception.class)
     @Override
     public int batchOrderConfirm(List<DutyExcept> records){
-
         for(DutyExcept record : records)
         {
             logger.info("******batchOrderConfirm******"+record);
@@ -138,11 +139,17 @@ public class DutyExceptServiceImpl implements DutyExceptService {
         return  record;
     }
 
+    @Transactional(readOnly=false,rollbackFor=Exception.class)
     @Override
     public int orderDeny(DutyExcept record) {
         // check_state = -1
         buildRecord(record,-1,0,0);
-        return dutyExceptMapper.updateByPrimaryKeySelective(record);
+        // 更新父记录 回显给用户
+        DutyExcept oldRecord = dutyExceptMapper.selectByPrimaryKey(record.getParentId());
+        oldRecord = buildRecord(oldRecord,0,0,0);
+        dutyExceptMapper.updateByPrimaryKeySelective(oldRecord);
+        dutyExceptMapper.updateByPrimaryKeySelective(record);
+        return 0;
     }
 
     @Override

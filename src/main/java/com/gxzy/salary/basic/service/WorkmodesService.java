@@ -1,7 +1,9 @@
 package com.gxzy.salary.basic.service;
 
 import com.gxzy.salary.basic.model.Workmodes;
+import com.gxzy.salary.basic.vo.BasicFilterVo;
 import com.gxzy.salary.intface.CurdService;
+import com.gxzy.salary.intface.EnhanceCrudService;
 
 /**
  * <p>
@@ -11,6 +13,6 @@ import com.gxzy.salary.intface.CurdService;
  * @author chenkaidi
  * @since 2019-08-16
  */
-public interface WorkmodesService extends CurdService<Workmodes> {
+public interface WorkmodesService extends EnhanceCrudService<Workmodes, BasicFilterVo> {
 
 }

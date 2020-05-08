@@ -70,9 +70,15 @@ public class EmpBasicInfo {
     private String mode;
 
     /**
-     * 班组
+     * 班组id
      */
     private String group;
+
+    /**
+     * 班组名称
+     */
+    @TableField(exist = false)
+    private String groupName;
 
     /**
      * 机台号id 可以多个,隔开
@@ -120,6 +126,4 @@ public class EmpBasicInfo {
     public static final String DEL_FLAG = "del_flag";
 
     public static final String COMMENT = "comment";
-
-
 }

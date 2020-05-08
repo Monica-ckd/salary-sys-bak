@@ -6,12 +6,21 @@
     <resultMap id="BaseResultMap" type="com.gxzy.salary.basic.model.Groups">
         <id column="id" property="id" />
         <result column="group" property="group" />
+        <result column="group_name" property="groupName" />
         <result column="comment" property="comment" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, group, comment
+        id, `group`,`group` as group_name, comment
     </sql>
+
+    <!--    selectAll-->
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from `groups`
+        where 1=1
+    </select>
 
 </mapper>

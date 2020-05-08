@@ -14,6 +14,7 @@
         <result column="wid" property="wid" />
         <result column="mode" property="mode" />
         <result column="group" property="group" />
+        <result column="group_name" property="groupName" />
         <result column="mid" property="mid" />
         <result column="create_time" property="createTime" />
         <result column="last_update_by" property="lastUpdateBy" />
@@ -25,26 +26,30 @@
     <!-- 通用查询结果列 -->
 
     <sql id="Base_Column_List">
-        id, `name`, pid,  wid, `group`, mid, create_time, last_update_by, last_update_time, del_flag, comment
+        ebi.id, `name`, pid,  wid, `group`, mid, create_time, last_update_by, last_update_time, del_flag, comment
     </sql>
 
+    <sql id="Base_Add_Column_List">
+        ebi.id, ebi.`name`, ebi.pid,  ebi.wid, ebi.`group`,gp.`group` as group_name, ebi.mid, ebi.create_time, last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
+    </sql>
     <!--   方便前端 "name": "韩梅梅","position": "卷接挡车工", "mode":"两班倒"-->
     <sql id="Join_Column_List">
-        ebi.id, ebi.`name`, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, wm.mode,ebi.`group`, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
+        ebi.id, ebi.`name`, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, wm.mode,ebi.`group`,gp.`group` as group_name, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
     </sql>
 
 <!--    // 查询员工岗位信息-->
 <!--    //    "eno": "111110","eName": "韩梅梅","position": "卷接挡车工","group":"甲", "mid":"2","bounsRatio": "0.55"-->
     <sql id="Join_Empinfo_Column_List">
-        ebi.id, ebi.`name`,su.eno, epi.bouns_ratio, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, ebi.`group`, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
+        ebi.id, ebi.`name`,su.eno, epi.bouns_ratio, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, ebi.`group`,gp.`group` as group_name, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
     </sql>
 
 <!-- 查询全部-->
     <select id="selectAll"  resultMap="BaseResultMap" >
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Add_Column_List" />
         from emp_basic_info ebi
-        WHERE 1=1;
+        left join `groups` gp
+        on ebi.`group` = gp.id;
     </select>
 
 <!--   findByName-->
@@ -66,6 +71,7 @@
         left join emp_post_info epi on ebi.pid = epi.id
         left join basic_position bp on epi.bpid = bp.id
         LEFT JOIN sys_user su ON ebi.NAME = su.NAME
+        left join `groups` gp on ebi.`group` = gp.id
         WHERE 1 = 1
         AND ebi.name = #{name,jdbcType=VARCHAR}
         AND ebi.create_time = #{createTime,jdbcType=VARCHAR}
@@ -79,6 +85,7 @@
         left join emp_post_info epi on ebi.pid = epi.id
         left join basic_position bp on epi.bpid = bp.id
         left join workmodes wm on ebi.wid = wm.id
+        left join `groups` gp on ebi.`group` = gp.id
         WHERE
         1 = 1
         AND ebi.create_time = #{monthTime,jdbcType=TIMESTAMP}

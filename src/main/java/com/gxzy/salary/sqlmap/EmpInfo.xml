@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.points.dao.EmpInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.points.model.EmpInfo">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="name" property="name" />
+        <result column="gender" property="gender" />
+        <result column="political" property="political" />
+        <result column="birth" property="birth" />
+        <result column="join_time" property="joinTime" />
+        <result column="remark" property="remark" />
+        <result column="extend" property="extend" />
+        <result column="field" property="field" />
+        <result column="status" property="status" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, name, gender, political, birth, join_time, remark, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
+    </sql>
+
+</mapper>

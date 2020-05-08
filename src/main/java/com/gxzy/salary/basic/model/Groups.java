@@ -1,6 +1,7 @@
 package com.gxzy.salary.basic.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -33,6 +34,8 @@ public class Groups{
      */
     private String group;
 
+    @TableField(exist = false)
+    private String groupName;
     /**
      * 备注
      */
