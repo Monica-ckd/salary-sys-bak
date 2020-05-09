@@ -1,14 +1,15 @@
 -- 员工基本信息表 emp_info
--- 姓名,性别,政治面貌,出生日期、入厂时间
+-- 姓名,性别,政治面貌,入党（团）时间,出生日期、入厂时间，
 DROP TABLE IF EXISTS `emp_info`;
 CREATE TABLE `emp_info`  (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '序号',
 	`user_id` bigint(20) NOT NULL  COMMENT '用户ID',
 	`name` varchar(100)  NOT NULL COMMENT '姓名',
 	`gender` varchar(20) NOT NULL COMMENT '姓别 男or女',
-	`political` varchar(255)  NOT NULL COMMENT '政治面貌',
 	`birth` date  NOT NULL COMMENT '出生日期',
-	`join_time` date  NOT NULL COMMENT '进厂时间',
+	`political` varchar(255)  NOT NULL COMMENT '政治面貌',
+	`join_time` date  NOT NULL COMMENT '入党（团）时间',
+	`entry_time` date  NOT NULL COMMENT '进厂时间',
 	`remark` varchar(255) NULL DEFAULT NULL COMMENT '备注',
 	`extend` varchar(255) NULL DEFAULT NULL COMMENT '扩展',
 	`field` varchar(255) NULL DEFAULT NULL COMMENT '扩展',
@@ -41,6 +42,8 @@ CREATE TABLE `module_item`  (
 	`del_flag` tinyint(4) NULL DEFAULT 0 COMMENT '是否删除  -1：已删除  0：正常',
 	PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '积分项目表' ROW_FORMAT = Dynamic;
+
+
 
 -- ----------------------------
 -- 积分记录表 id,名字,项目,分数,描述,日期,级别,等级,记录人、备注、保留字段
