@@ -59,9 +59,14 @@ public class EmpInfo extends Model<EmpInfo> {
     private LocalDate birth;
 
     /**
-     * 进厂时间
+     * 入党（团）时间
      */
     private LocalDate joinTime;
+
+    /**
+     * 进厂时间
+     */
+    private LocalDate entryTime;
 
     /**
      * 备注

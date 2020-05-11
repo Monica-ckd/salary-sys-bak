@@ -8,9 +8,10 @@
         <result column="user_id" property="userId" />
         <result column="name" property="name" />
         <result column="gender" property="gender" />
-        <result column="political" property="political" />
         <result column="birth" property="birth" />
+        <result column="political" property="political" />
         <result column="join_time" property="joinTime" />
+        <result column="entry_time" property="entryTime" />
         <result column="remark" property="remark" />
         <result column="extend" property="extend" />
         <result column="field" property="field" />
@@ -24,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, name, gender, political, birth, join_time, remark, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
+        id, user_id, name, gender, birth, political, join_time, entry_time, remark, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
     </sql>
 
 </mapper>

@@ -1,5 +1,9 @@
 package com.gxzy.salary.service.impl;
 
+import com.gxzy.salary.core.page.ColumnFilter;
+import com.gxzy.salary.core.page.MybatisPageHelper;
+import com.gxzy.salary.core.page.PageRequest;
+import com.gxzy.salary.core.page.PageResult;
 import com.gxzy.salary.dao.SysRoleMapper;
 import com.gxzy.salary.dao.SysUserMapper;
 import com.gxzy.salary.dao.SysUserRoleMapper;
@@ -51,6 +55,51 @@ public class SysUserServiceImpl  implements SysUserService {
 		return sysUserMapper.selectAll();
 	}
 
+	@Override
+	public PageResult findPage(PageRequest pageRequest) {
+		PageResult pageResult = null;
+		String name = getColumnFilterValue(pageRequest, "name");
+		String email = getColumnFilterValue(pageRequest, "email");
+		if(name != null) {
+			if(email != null) {
+				pageResult = MybatisPageHelper.findPage(pageRequest, sysUserMapper, "findPageByNameAndEmail", name, email);
+			} else {
+				pageResult = MybatisPageHelper.findPage(pageRequest, sysUserMapper, "findPageByName", name);
+			}
+		} else {
+			pageResult = MybatisPageHelper.findPage(pageRequest, sysUserMapper);
+		}
+		// 加载用户角色信息
+		findUserRoles(pageResult);
+		return pageResult;
+	}
+
+	/**
+	 * 加载用户角色
+	 * @param pageResult
+	 */
+	private void findUserRoles(PageResult pageResult) {
+		List<?> content = pageResult.getContent();
+		for(Object object:content) {
+			SysUser sysUser = (SysUser) object;
+			List<SysUserRole> userRoles = findUserRoles(sysUser.getId());
+			sysUser.setUserRoles(userRoles);
+			sysUser.setRoleNames(getRoleNames(userRoles));
+		}
+	}
+	/**
+	 * 获取过滤字段的值
+	 * @param filterName
+	 * @return
+	 */
+	public String getColumnFilterValue(PageRequest pageRequest, String filterName) {
+		String value = null;
+		ColumnFilter columnFilter = pageRequest.getColumnFilter(filterName);
+		if(columnFilter != null) {
+			value = columnFilter.getValue();
+		}
+		return value;
+	}
 
 
 	@Transactional

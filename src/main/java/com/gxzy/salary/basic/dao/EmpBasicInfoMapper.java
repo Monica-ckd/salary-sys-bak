@@ -25,4 +25,6 @@ import java.util.List;
     List<EmpBasicInfo> findForPull(String monthTime);
 
     EmpBasicInfo findEmpByName(BasicFilterVo name);
+
+    String getMonthTime();
 }

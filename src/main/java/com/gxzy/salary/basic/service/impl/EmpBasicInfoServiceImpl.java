@@ -37,6 +37,11 @@ public class EmpBasicInfoServiceImpl  implements EmpBasicInfoService {
     }
 
     @Override
+    public String getLastMonth() {
+        return empBasicInfoMapper.getMonthTime();
+    }
+
+    @Override
     public List<EmpBasicInfo> findForPull(String monthTime) {
         logger.info("*empBasicInfo**findForPull*"+monthTime);
 //        List<EmpBasicInfo> empBasicInfos = empBasicInfoMapper.findForPull();

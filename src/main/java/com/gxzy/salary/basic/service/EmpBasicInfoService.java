@@ -21,4 +21,6 @@ public interface EmpBasicInfoService extends CurdService<EmpBasicInfo> {
     List<EmpBasicInfo> findForPull(String monthTime);
 
     EmpBasicInfo findEmpByName(BasicFilterVo filter);
+
+    String getLastMonth();
 }

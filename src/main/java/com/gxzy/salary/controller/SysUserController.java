@@ -2,6 +2,7 @@ package com.gxzy.salary.controller;
 
 import com.gxzy.salary.constants.SysConstants;
 import com.gxzy.salary.core.http.HttpResult;
+import com.gxzy.salary.core.page.PageRequest;
 import com.gxzy.salary.model.SysUser;
 import com.gxzy.salary.service.SysUserService;
 import com.gxzy.salary.util.PasswordUtils;
@@ -53,6 +54,7 @@ public class SysUserController {
                 String password = PasswordUtils.encrypte(record.getPassword(), salt);
                 record.setSalt(salt);
                 record.setPassword(password);
+                record.setStatus(new Byte("1"));
             } else {
                 // 修改用户, 且修改了密码
                 if(!record.getPassword().equals(user.getPassword())) {
@@ -118,6 +120,12 @@ public class SysUserController {
         return HttpResult.ok(sysUserService.updatePwd(user));
     }
         return HttpResult.error();
+    }
+
+//分页查询
+    @PostMapping(value="/findPage")
+    public HttpResult findPage(@RequestBody PageRequest pageRequest) {
+        return HttpResult.ok(sysUserService.findPage(pageRequest));
     }
 
 }

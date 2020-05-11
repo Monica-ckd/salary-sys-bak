@@ -28,7 +28,7 @@ public class MabatisPlusGenerator {
     //作者
     private static String authorName="chenkaidi";
     //要生成的表名
-    private static String[] tables= {"point_record"};
+    private static String[] tables= {"emp_info"};
     //table前缀
     private static String prefix="";
 

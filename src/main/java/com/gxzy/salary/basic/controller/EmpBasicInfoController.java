@@ -45,7 +45,9 @@ public class EmpBasicInfoController {
     @GetMapping(value = "/findForPull")
     public HttpResult findForPull() {
         // 取当月排班所有操作工信息 post_type=0
-        String monthTime = CommUtils.getMonthFirst();
+//        String monthTime = CommUtils.getMonthFirst();
+        String monthTime = empBasicInfoService.getLastMonth();
+        logger.info("monthTime"+monthTime);
         return HttpResult.ok(empBasicInfoService.findForPull(monthTime));
 }
 

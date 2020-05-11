@@ -43,6 +43,14 @@
         ebi.id, ebi.`name`,su.eno, epi.bouns_ratio, ebi.pid, bp.id as bpid, bp.`position`, ebi.wid, ebi.`group`,gp.`group` as group_name, ebi.mid, ebi.create_time, ebi.last_update_by, ebi.last_update_time, ebi.del_flag, ebi.comment
     </sql>
 
+<!--    getMonthTime 获取当前最新排版数据的时间-->
+    <select id="getMonthTime"  resultType="java.lang.String" >
+        select
+        ebi.create_time
+        from emp_basic_info ebi
+        group by ebi.create_time
+        order by ebi.create_time desc LIMIT 0,1;
+    </select>
 <!-- 查询全部-->
     <select id="selectAll"  resultMap="BaseResultMap" >
         select
@@ -74,7 +82,7 @@
         left join `groups` gp on ebi.`group` = gp.id
         WHERE 1 = 1
         AND ebi.name = #{name,jdbcType=VARCHAR}
-        AND ebi.create_time = #{createTime,jdbcType=VARCHAR}
+        order by ebi.create_time desc LIMIT 0,1
     </select>
 <!--  findForPull  查询所有操作工post_type= '0';-->
     <select id="findForPull" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -89,8 +97,7 @@
         WHERE
         1 = 1
         AND ebi.create_time = #{monthTime,jdbcType=TIMESTAMP}
-        and bp.post_type= '0'
-        or bp.post_type= '1';
+        and bp.post_type != 3;
     </select>
 
 

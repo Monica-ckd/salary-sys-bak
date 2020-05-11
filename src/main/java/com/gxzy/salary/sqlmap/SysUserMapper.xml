@@ -71,6 +71,9 @@
       <if test="password != null">
         password,
       </if>
+      <if test="eno != null">
+        eno,
+      </if>
       <if test="salt != null">
         salt,
       </if>
@@ -108,6 +111,9 @@
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="eno != null">
+        #{eno,jdbcType=VARCHAR},
       </if>
       <if test="salt != null">
         #{salt,jdbcType=VARCHAR},
@@ -193,5 +199,19 @@
       del_flag = #{delFlag,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="findPageByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <bind name="pattern" value="'%' + _parameter.name + '%'" />
+    select u.* from sys_user u
+    where u.name like #{pattern}
+  </select>
+  <select id="findPageByNameAndEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <bind name="patternName" value="'%' + _parameter.name + '%'" />
+    <bind name="patternEmail" value="'%' + _parameter.email + '%'" />
+    select u.*
+    where u.name like #{patternName}
+    and u.email like #{patternEmail}
+  </select>
 
 </mapper>

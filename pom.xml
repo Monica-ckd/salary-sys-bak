@@ -26,9 +26,16 @@
         <shiro.version>1.4.0</shiro.version>
         <fastjson.version>1.2.48</fastjson.version>
         <freemarker.version>2.3.28</freemarker.version>
+        <pagehelper.spring.version>1.2.5</pagehelper.spring.version>
     </properties>
 
     <dependencies>
+        <!--   pagehelper-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper.spring.version}</version>
+        </dependency>
         <!-- spring boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

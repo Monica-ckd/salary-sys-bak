@@ -1,5 +1,7 @@
 package com.gxzy.salary.service;
 
+import com.gxzy.salary.core.page.PageRequest;
+import com.gxzy.salary.core.page.PageResult;
 import com.gxzy.salary.model.SysUser;
 import com.gxzy.salary.model.SysUserRole;
 import com.gxzy.salary.intface.CurdService;
@@ -42,5 +44,7 @@ public interface SysUserService extends CurdService<SysUser> {
      * @return
      */
     List<SysUser> findAll();
+
+    PageResult findPage(PageRequest pageRequest);
 
 }
