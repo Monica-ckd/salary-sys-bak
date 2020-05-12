@@ -4,6 +4,9 @@ package com.gxzy.salary.basic.service.impl;
 import com.gxzy.salary.basic.dao.WorktimeinfoMapper;
 import com.gxzy.salary.basic.model.Worktimeinfo;
 import com.gxzy.salary.basic.service.WorktimeinfoService;
+import com.gxzy.salary.basic.vo.BasicFilterVo;
+import com.gxzy.salary.core.page.PageRequest;
+import com.gxzy.salary.core.page.PageResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,16 @@ public class WorktimeinfoServiceImpl  implements WorktimeinfoService {
             worktimeinfoMapper.insert(record);
         }
         return 1;
+    }
+
+    @Override
+    public List<Worktimeinfo> findByCondition(BasicFilterVo filter) {
+        return null;
+    }
+
+    @Override
+    public PageResult findPage(PageRequest page) {
+        return null;
     }
 
     @Override

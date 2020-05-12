@@ -32,4 +32,5 @@ public interface BasicMapper<T> extends Mapper<T> {
 //    List<T> findByName(@Param(value = "name") String name);
 
     List<T> selectByCondition(BasicFilterVo filter);
+
 }

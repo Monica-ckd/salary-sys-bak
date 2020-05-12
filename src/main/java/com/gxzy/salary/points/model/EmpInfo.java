@@ -34,9 +34,9 @@ public class EmpInfo extends Model<EmpInfo> {
     private Long id;
 
     /**
-     * 用户ID
+     * 用户工号
      */
-    private Long userId;
+    private String eno;
 
     /**
      * 姓名
@@ -116,7 +116,7 @@ public class EmpInfo extends Model<EmpInfo> {
 
     public static final String ID = "id";
 
-    public static final String USER_ID = "user_id";
+    public static final String ENO = "eno";
 
     public static final String NAME = "name";
 
@@ -127,6 +127,8 @@ public class EmpInfo extends Model<EmpInfo> {
     public static final String BIRTH = "birth";
 
     public static final String JOIN_TIME = "join_time";
+
+    public static final String ENTRY_TIME = "entry_time";
 
     public static final String REMARK = "remark";
 

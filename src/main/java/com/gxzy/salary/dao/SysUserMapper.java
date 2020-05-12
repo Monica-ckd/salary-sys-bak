@@ -26,6 +26,8 @@ public interface SysUserMapper {
 
     SysUser findByName(@Param(value = "name") String name);
 
+    List<SysUser> findPage();
+
     List<SysUser> findPageByName(@Param(value="name") String name);
 
     List<SysUser> findPageByNameAndEmail(@Param(value="name") String name, @Param(value="email") String email);

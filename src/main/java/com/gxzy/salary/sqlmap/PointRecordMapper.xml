@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxzy.salary.points.dao.PointRecordMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gxzy.salary.points.model.PointRecord">
+        <id column="id" property="id" />
+        <result column="eno" property="eno" />
+        <result column="name" property="name" />
+        <result column="item_id" property="itemId" />
+        <result column="item_name" property="itemName" />
+        <result column="score" property="score" />
+        <result column="level" property="level" />
+        <result column="grade" property="grade" />
+        <result column="desc" property="desc" />
+        <result column="comment" property="comment" />
+        <result column="extend" property="extend" />
+        <result column="field" property="field" />
+        <result column="status" property="status" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, eno, name, item_id, score, level, grade, desc, comment, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
+    </sql>
+    <sql id="Join_Column_List">
+        pr.id, pr.eno, pr.name, pr.item_id, mi.item as item_name,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
+    </sql>
+
+    <select id="findPage"  resultMap="BaseResultMap">
+        select
+        <include refid="Join_Column_List" />
+        from point_record pr
+        left join module_item mi on pr.item_id=mi.id
+    </select>
+
+
+<!--    条件查询 selectByCondition-->
+    <select id="selectByCondition" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap">
+        select
+        <include refid="Join_Column_List" />
+        from point_record pr
+        left join module_item mi on pr.item_id=mi.id
+        where 1=1
+        <if test="name != null" >
+            AND
+            pr.name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="sTime != null">
+            AND
+            pr.create_time &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null">
+            AND
+            pr.create_time &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+<!--    insertSelective-->
+    <insert id="insertSelective" parameterType="com.gxzy.salary.points.model.PointRecord">
+        insert into point_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="eno != null">
+                eno,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="itemId != null">
+                item_id,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="grade != null">
+                grade,
+            </if>
+            <if test="desc != null">
+                desc,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+            <if test="extend != null">
+                extend,
+            </if>
+            <if test="field != null">
+                field,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by,
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="eno != null">
+                #{eno,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="itemId != null">
+                #{itemId,jdbcType=BIGINT},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=TINYINT},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="extend != null">
+                #{extend,jdbcType=VARCHAR},
+            </if>
+            <if test="field != null">
+                #{field,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateBy != null">
+                #{lastUpdateBy,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <!--    updateByPrimaryKeySelective-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.gxzy.salary.points.model.PointRecord">
+        update point_record
+        <set>
+            <if test="itemId != null">
+                item_id = #{itemId,jdbcType=BIGINT},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=TINYINT},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="extend != null">
+                extend = #{extend,jdbcType=VARCHAR},
+            </if>
+            <if test="field != null">
+                field = #{field,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateBy != null">
+                last_update_by = #{lastUpdateBy,jdbcType=BIGINT},
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+<!--    deleteByPrimaryKey-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from point_record
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

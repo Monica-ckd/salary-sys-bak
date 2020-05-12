@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gxzy.salary.points.model.EmpInfo">
         <id column="id" property="id" />
-        <result column="user_id" property="userId" />
+        <result column="eno" property="eno" />
         <result column="name" property="name" />
         <result column="gender" property="gender" />
         <result column="birth" property="birth" />
@@ -25,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, name, gender, birth, political, join_time, entry_time, remark, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
+        id, eno, name, gender, birth, political, join_time, entry_time, remark, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
     </sql>
 
 </mapper>

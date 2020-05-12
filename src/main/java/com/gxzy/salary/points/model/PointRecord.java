@@ -1,5 +1,6 @@
 package com.gxzy.salary.points.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -35,12 +36,23 @@ public class PointRecord extends Model<PointRecord> {
     /**
      * 用户ID
      */
-    private Long userId;
+    private String eno;
+
+    /**
+     * 用户姓名
+     */
+    private String name;
 
     /**
      * 项目模块ID
      */
     private Long itemId;
+
+    /**
+     * 项目模块名称
+     */
+    @TableField(exist=false)
+    private String itemName;
 
     /**
      * 分值
@@ -110,7 +122,9 @@ public class PointRecord extends Model<PointRecord> {
 
     public static final String ID = "id";
 
-    public static final String USER_ID = "user_id";
+    public static final String ENO = "eno";
+
+    public static final String NAME = "NAME";
 
     public static final String ITEM_ID = "item_id";
 
@@ -145,4 +159,27 @@ public class PointRecord extends Model<PointRecord> {
         return this.id;
     }
 
+    @Override
+    public String toString() {
+        return "PointRecord{" +
+                "id=" + id +
+                ", eno=" + eno +
+                ", name='" + name + '\'' +
+                ", itemId=" + itemId +
+                ", itemName='" + itemName + '\'' +
+                ", score=" + score +
+                ", level='" + level + '\'' +
+                ", grade='" + grade + '\'' +
+                ", desc='" + desc + '\'' +
+                ", comment='" + comment + '\'' +
+                ", extend='" + extend + '\'' +
+                ", field='" + field + '\'' +
+                ", status=" + status +
+                ", createBy='" + createBy + '\'' +
+                ", createTime=" + createTime +
+                ", lastUpdateBy='" + lastUpdateBy + '\'' +
+                ", lastUpdateTime=" + lastUpdateTime +
+                ", delFlag=" + delFlag +
+                '}';
+    }
 }

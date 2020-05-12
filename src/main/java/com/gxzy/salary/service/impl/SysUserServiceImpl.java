@@ -62,12 +62,16 @@ public class SysUserServiceImpl  implements SysUserService {
 		String email = getColumnFilterValue(pageRequest, "email");
 		if(name != null) {
 			if(email != null) {
+				logger.info("findPage email"+pageRequest);
 				pageResult = MybatisPageHelper.findPage(pageRequest, sysUserMapper, "findPageByNameAndEmail", name, email);
 			} else {
+				logger.info("findPage name"+pageRequest);
 				pageResult = MybatisPageHelper.findPage(pageRequest, sysUserMapper, "findPageByName", name);
 			}
 		} else {
+			logger.info("findPage empty"+pageRequest);
 			pageResult = MybatisPageHelper.findPage(pageRequest, sysUserMapper);
+			logger.info("findPage"+pageResult);
 		}
 		// 加载用户角色信息
 		findUserRoles(pageResult);

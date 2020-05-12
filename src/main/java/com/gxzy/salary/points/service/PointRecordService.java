@@ -1,5 +1,8 @@
 package com.gxzy.salary.points.service;
 
+import com.gxzy.salary.core.page.PageRequest;
+import com.gxzy.salary.core.page.PageResult;
+import com.gxzy.salary.intface.EnCurdService;
 import com.gxzy.salary.points.model.PointRecord;
 import com.gxzy.salary.intface.CurdService;
 
@@ -11,6 +14,6 @@ import com.gxzy.salary.intface.CurdService;
  * @author chenkaidi
  * @since 2020-05-08
  */
-public interface PointRecordService extends CurdService<PointRecord> {
+public interface PointRecordService extends EnCurdService<PointRecord> {
 
 }
