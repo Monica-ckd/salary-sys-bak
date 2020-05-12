@@ -1,5 +1,6 @@
 package com.gxzy.salary.points.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.gxzy.salary.basic.vo.BasicFilterVo;
 import com.gxzy.salary.core.page.MybatisPageHelper;
 import com.gxzy.salary.core.page.PageRequest;
@@ -41,7 +42,6 @@ public class PointRecordServiceImpl implements PointRecordService {
             // 新增积分记录
             logger.info("新增积分记录");
             pointRecordMapper.insertSelective(record);
-            id = record.getId();
         } else {
             // 更新积分记录信息
             logger.info("更新积分记录信息"+id);
@@ -84,8 +84,35 @@ public class PointRecordServiceImpl implements PointRecordService {
 
     @Override
     public List<PointRecord> findByCondition(BasicFilterVo filter) {
-        return pointRecordMapper.selectByCondition(filter);
+        List records = pointRecordMapper.selectByCondition(filter);
+        return records;
     }
 
+
+    @Override
+    public int deleteById(Long id) {
+        return pointRecordMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public PageResult findByPageCondition(BasicFilterVo filterVo) {
+            List records = pointRecordMapper.selectByCondition(filterVo);
+            return getPageResult(new PageInfo(records));
+    }
+
+    @Override
+    public List<PointRecord> findAll() {
+        return pointRecordMapper.selectAll();
+    }
+
+    private PageResult getPageResult(PageInfo<?> pageInfo) {
+        PageResult pageResult = new PageResult();
+        pageResult.setPageNum(pageInfo.getPageNum());
+        pageResult.setPageSize(pageInfo.getPageSize());
+        pageResult.setTotalSize(pageInfo.getTotal());
+        pageResult.setTotalPages(pageInfo.getPages());
+        pageResult.setContent(pageInfo.getList());
+        return pageResult;
+    }
 
 }

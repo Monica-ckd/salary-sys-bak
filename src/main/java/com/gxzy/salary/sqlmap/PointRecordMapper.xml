@@ -25,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, eno, name, item_id, score, level, grade, desc, comment, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
+        id, eno, name, item_id, score, level, grade, `desc`, comment, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
     </sql>
     <sql id="Join_Column_List">
         pr.id, pr.eno, pr.name, pr.item_id, mi.item as item_name,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
@@ -36,6 +36,15 @@
         <include refid="Join_Column_List" />
         from point_record pr
         left join module_item mi on pr.item_id=mi.id
+        order by pr.create_time desc,pr.last_update_time desc
+    </select>
+<!--    selectAll-->
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select
+        <include refid="Join_Column_List" />
+        from point_record pr
+        left join module_item mi on pr.item_id=mi.id
+        order by pr.create_time desc,pr.last_update_time desc
     </select>
 
 
@@ -46,15 +55,15 @@
         from point_record pr
         left join module_item mi on pr.item_id=mi.id
         where 1=1
-        <if test="name != null" >
+        <if test="name != null and name!=''" >
             AND
-            pr.name = #{name,jdbcType=VARCHAR}
+            pr.name like concat('%',#{name,jdbcType=VARCHAR},'%')
         </if>
-        <if test="sTime != null">
+        <if test="sTime != null and sTime!=''">
             AND
             pr.create_time &gt;= #{sTime,jdbcType=TIMESTAMP}
         </if>
-        <if test="eTime != null">
+        <if test="eTime != null and eTime!=''">
             AND
             pr.create_time &lt;= #{eTime,jdbcType=TIMESTAMP}
         </if>
@@ -86,7 +95,7 @@
                 grade,
             </if>
             <if test="desc != null">
-                desc,
+                `desc`,
             </if>
             <if test="comment != null">
                 comment,
@@ -187,7 +196,7 @@
                 grade = #{grade,jdbcType=VARCHAR},
             </if>
             <if test="desc != null">
-                desc = #{desc,jdbcType=VARCHAR},
+                `desc` = #{desc,jdbcType=VARCHAR},
             </if>
             <if test="comment != null">
                 comment = #{comment,jdbcType=VARCHAR},

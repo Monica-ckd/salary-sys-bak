@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -96,7 +95,7 @@ public class EmpInfo extends Model<EmpInfo> {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private String createTime;
 
     /**
      * 更新人
@@ -106,7 +105,7 @@ public class EmpInfo extends Model<EmpInfo> {
     /**
      * 更新时间
      */
-    private LocalDateTime lastUpdateTime;
+    private String lastUpdateTime;
 
     /**
      * 是否删除  -1：已删除  0：正常

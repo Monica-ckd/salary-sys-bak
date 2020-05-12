@@ -4,6 +4,8 @@ import java.util.List;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.gxzy.salary.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  MyBatis 分页查询助手
@@ -14,7 +16,10 @@ import com.gxzy.salary.util.ReflectionUtils;
 public class MybatisPageHelper {
 
 	public static final String findPage = "findPage";
-	
+	/**
+	 * 日志对象
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(MybatisPageHelper.class);
 	/**
 	 * 分页查询, 约定查询方法名为 “findPage” 
 	 * @param pageRequest 分页请求
