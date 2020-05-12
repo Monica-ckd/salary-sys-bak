@@ -17,7 +17,7 @@ public class PageRequest {
 	/**
 	 * 每页数量
 	 */
-	private int pageSize = 10;
+	private int pageSize = 20;
 	/**
 	 * 每页数量
 	 */

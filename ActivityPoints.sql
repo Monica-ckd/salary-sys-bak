@@ -3,7 +3,7 @@
 DROP TABLE IF EXISTS `emp_info`;
 CREATE TABLE `emp_info`  (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '序号',
-	`user_id` bigint(20) NOT NULL  COMMENT '用户ID',
+	`eno` varchar(100) NOT NULL  COMMENT '工号',
 	`name` varchar(100)  NOT NULL COMMENT '姓名',
 	`gender` varchar(20) NOT NULL COMMENT '姓别 男or女',
 	`birth` date  NOT NULL COMMENT '出生日期',
@@ -51,7 +51,8 @@ CREATE TABLE `module_item`  (
 DROP TABLE IF EXISTS `point_record`;
 CREATE TABLE `point_record`  (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '序号',
-	`user_id` bigint(20) NOT NULL  COMMENT '用户ID',
+	`eno` varchar(100)  NULL default NULL COMMENT '用户工号',
+	`name` varchar(100)  NOT NULL COMMENT '姓名',
 	`item_id` bigint(20) NOT NULL  COMMENT '项目模块ID',
 	`score` tinyint(4) NULL DEFAULT 0 COMMENT '分值',
 	`level` varchar(20) NULL default NULL COMMENT '级别 公司，厂级，车间级...',

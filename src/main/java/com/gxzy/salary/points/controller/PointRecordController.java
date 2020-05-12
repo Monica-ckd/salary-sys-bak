@@ -43,6 +43,11 @@ public class PointRecordController {
         logger.info("积分记录条件查询"+filterVo);
         return HttpResult.ok(pointRecordService.findByCondition(filterVo));
     }
+    @PostMapping(value="/findByPageCondition")
+    public HttpResult findByPageCondition(@RequestBody BasicFilterVo filterVo) {
+        logger.info("积分记录条件分页查询"+filterVo);
+        return HttpResult.ok(pointRecordService.findByPageCondition(filterVo));
+    }
 
     // 新增 或修改
     @PostMapping(value="/addOrUpdate")
@@ -56,4 +61,10 @@ public class PointRecordController {
         logger.info("积分记录删除"+record);
         return HttpResult.ok(pointRecordService.delete(record));
     }
+    // 根据id删除
+     @GetMapping(value="/delById")
+        public HttpResult delById(@RequestParam Long id) {
+            logger.info("积分记录删除"+id);
+            return HttpResult.ok(pointRecordService.deleteById(id));
+        }
 }
