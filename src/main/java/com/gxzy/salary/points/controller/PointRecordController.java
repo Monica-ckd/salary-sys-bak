@@ -43,12 +43,15 @@ public class PointRecordController {
         logger.info("积分记录条件查询"+filterVo);
         return HttpResult.ok(pointRecordService.findByCondition(filterVo));
     }
+<<<<<<< HEAD
     // 条件查询
     @GetMapping(value="/findAll")
     public HttpResult findAll() {
         logger.info("积分记录查询全部");
         return HttpResult.ok(pointRecordService.findAll());
     }
+=======
+>>>>>>> ccabb361d0170a600af9d6d42c4f9ab2ebd2dd52
     @PostMapping(value="/findByPageCondition")
     public HttpResult findByPageCondition(@RequestBody BasicFilterVo filterVo) {
         logger.info("积分记录条件分页查询"+filterVo);

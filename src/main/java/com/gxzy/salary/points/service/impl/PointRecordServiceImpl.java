@@ -100,11 +100,14 @@ public class PointRecordServiceImpl implements PointRecordService {
             return getPageResult(new PageInfo(records));
     }
 
+<<<<<<< HEAD
     @Override
     public List<PointRecord> findAll() {
         return pointRecordMapper.selectAll();
     }
 
+=======
+>>>>>>> ccabb361d0170a600af9d6d42c4f9ab2ebd2dd52
     private PageResult getPageResult(PageInfo<?> pageInfo) {
         PageResult pageResult = new PageResult();
         pageResult.setPageNum(pageInfo.getPageNum());
