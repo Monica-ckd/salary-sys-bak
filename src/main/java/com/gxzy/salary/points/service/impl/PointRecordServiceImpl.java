@@ -6,8 +6,11 @@ import com.gxzy.salary.core.page.MybatisPageHelper;
 import com.gxzy.salary.core.page.PageRequest;
 import com.gxzy.salary.core.page.PageResult;
 import com.gxzy.salary.points.controller.PointRecordController;
+import com.gxzy.salary.points.dao.ModuleItemMapper;
+import com.gxzy.salary.points.model.ModuleItem;
 import com.gxzy.salary.points.model.PointRecord;
 import com.gxzy.salary.points.dao.PointRecordMapper;
+import com.gxzy.salary.points.model.PointSummaryEntity;
 import com.gxzy.salary.points.service.PointRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
@@ -15,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -34,6 +37,9 @@ public class PointRecordServiceImpl implements PointRecordService {
     private static final Logger logger = LoggerFactory.getLogger(PointRecordServiceImpl.class);
     @Autowired
     private PointRecordMapper pointRecordMapper;
+
+    @Autowired
+    private ModuleItemMapper moduleItemMapper;
     // 新增或删除操作
     @Override
     public int save(PointRecord record) {
@@ -100,14 +106,15 @@ public class PointRecordServiceImpl implements PointRecordService {
             return getPageResult(new PageInfo(records));
     }
 
-<<<<<<< HEAD
+
     @Override
     public List<PointRecord> findAll() {
         return pointRecordMapper.selectAll();
     }
 
-=======
->>>>>>> ccabb361d0170a600af9d6d42c4f9ab2ebd2dd52
+
+
+
     private PageResult getPageResult(PageInfo<?> pageInfo) {
         PageResult pageResult = new PageResult();
         pageResult.setPageNum(pageInfo.getPageNum());
@@ -116,6 +123,91 @@ public class PointRecordServiceImpl implements PointRecordService {
         pageResult.setTotalPages(pageInfo.getPages());
         pageResult.setContent(pageInfo.getList());
         return pageResult;
+    }
+
+    @Override
+    public List findSummary(BasicFilterVo filterVo) {
+        logger.info("***findSummary***"+filterVo);
+        // 返回值
+        List<PointSummaryEntity> summaryEntities = new ArrayList<>();
+        // 名字索引
+        HashMap<String,PointSummaryEntity> pointIndexMap = new HashMap<>();
+
+        // 初始化map
+        initIndexMap(filterVo,pointIndexMap);
+        // 获取积分记录
+        List<PointRecord> pointRecords = pointRecordMapper.selectByCondition(filterVo);
+        for (PointRecord record:pointRecords) {
+            // 分值
+            int score = record.getScore().intValue();
+            if(score == 0)
+            {
+                continue;
+            }
+            // item别名 方便前端映射
+            String itemExtend = record.getItemExtend();
+            PointSummaryEntity entity = pointIndexMap.get(record.getName());
+            HashMap<String,Integer> scoreMap = entity.getScoreMap();
+            // 更新分数
+            scoreMap.put(itemExtend,scoreMap.get(itemExtend).intValue()+score);
+            // 更新总分
+            entity.setSummary(entity.getSummary()+score);
+            // 更新PointSummaryEntity
+            entity.setScoreMap(scoreMap);
+            pointIndexMap.put(record.getName(),entity);
+        }
+        // 遍历map,构造返回Lsit
+        Set<String> keySet=pointIndexMap.keySet();
+        for(String key:keySet){
+            summaryEntities.add(pointIndexMap.get(key));
+        }
+        logger.info("***findSummary***"+summaryEntities.toArray());
+        return summaryEntities;
+    }
+
+    // 初始化map
+    private void initIndexMap(BasicFilterVo filterVo, HashMap<String, PointSummaryEntity> pointIndexMap) {
+        logger.info("****initIndexMap***");
+        // 获取所有的姓名
+        List<String> names = pointRecordMapper.selectNames(filterVo);
+        logger.info("names"+names.toArray());
+        for (String name:names) {
+            PointSummaryEntity entity = initSumEntity(name);
+            pointIndexMap.put(name,entity);
+        }
+        logger.info("****initIndexMap**pointIndexMap*"+pointIndexMap);
+    }
+
+    /**
+     * 初始化SumEntity
+     * @param name
+     * @return summaryEntity
+     */
+    private PointSummaryEntity initSumEntity(String name) {
+        logger.info("****initSumEntity***");
+        PointSummaryEntity summaryEntity = new PointSummaryEntity();
+        summaryEntity.setName(name);
+        summaryEntity.setSummary(0);
+        HashMap<String, Integer> scoreMap = initScoreMap();
+        summaryEntity.setScoreMap(scoreMap);
+        logger.info("****initSumEntity***"+summaryEntity);
+        return summaryEntity;
+    }
+
+    /**
+     * 初始化ScoreMap
+     * @return
+     */
+    private HashMap<String, Integer> initScoreMap() {
+        logger.info("initScoreMap");
+        HashMap<String, Integer> scoreMap = new HashMap<>();
+        //获取项目模块配置列表
+        List<ModuleItem> moduleItems = moduleItemMapper.selectAll();
+        for (ModuleItem moduleItem:moduleItems) {
+            scoreMap.put(moduleItem.getExtend(),0);
+        }
+        logger.info("initScoreMap end"+scoreMap);
+        return scoreMap;
     }
 
 }

@@ -18,4 +18,6 @@ public interface ModuleItemService extends CurdService<ModuleItem> {
     List<ModuleItem> findAll();
 
     int deleteById(Long id);
+
+    List findForTable();
 }

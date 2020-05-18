@@ -22,9 +22,10 @@ public interface PointRecordService extends EnCurdService<PointRecord> {
     int deleteById(Long id);
 
     PageResult findByPageCondition(BasicFilterVo filterVo);
-<<<<<<< HEAD
+
 
     List<PointRecord> findAll();
-=======
->>>>>>> ccabb361d0170a600af9d6d42c4f9ab2ebd2dd52
+
+    List findSummary(BasicFilterVo filterVo);
+
 }

@@ -35,6 +35,9 @@ public class ModuleItemController {
         logger.info("积分项目模块配置查询");
         return HttpResult.ok(moduleItemService.findAll());
     }
+
+
+
     // 删除
     @GetMapping(value="/delete")
     public HttpResult deleteById(@RequestParam Long id) {
@@ -46,5 +49,12 @@ public class ModuleItemController {
     public HttpResult saveRecords(@RequestBody ModuleItem record) {
         logger.info("积分新增或修改记录"+record);
         return HttpResult.ok(moduleItemService.save(record));
+    }
+
+    // 查询
+    @GetMapping(value="/findForTable")
+    public HttpResult findForTable() {
+        logger.info("积分项目模块构造汇总表table查询");
+        return HttpResult.ok(moduleItemService.findForTable());
     }
 }
