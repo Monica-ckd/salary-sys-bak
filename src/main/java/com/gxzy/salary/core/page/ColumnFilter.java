@@ -29,5 +29,12 @@ public class ColumnFilter {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "ColumnFilter{" +
+				"name='" + name + '\'' +
+				", value='" + value + '\'' +
+				'}';
+	}
 }

@@ -2,8 +2,8 @@ package com.gxzy.salary.points.service.impl;
 
 import com.gxzy.salary.basic.vo.BasicFilterVo;
 import com.gxzy.salary.core.exception.MyException;
-import com.gxzy.salary.points.model.EmpInfo;
 import com.gxzy.salary.points.dao.EmpInfoMapper;
+import com.gxzy.salary.points.model.EmpInfo;
 import com.gxzy.salary.points.service.EmpInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

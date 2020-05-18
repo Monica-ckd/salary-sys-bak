@@ -72,4 +72,10 @@ public class ModuleItemServiceImpl implements ModuleItemService {
          moduleItemMapper.deleteByPrimaryKey(id);
         return 1;
     }
+
+    @Override
+    public List findForTable() {
+        logger.info("**积分项目模块构造汇总表table查询**");
+        return moduleItemMapper.selectForTable();
+    }
 }

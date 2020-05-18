@@ -58,4 +58,15 @@ public class PageResult {
 	public void setContent(List<?> content) {
 		this.content = content;
 	}
+
+	@Override
+	public String toString() {
+		return "PageResult{" +
+				"pageNum=" + pageNum +
+				", pageSize=" + pageSize +
+				", totalSize=" + totalSize +
+				", totalPages=" + totalPages +
+				", content=" + content +
+				'}';
+	}
 }

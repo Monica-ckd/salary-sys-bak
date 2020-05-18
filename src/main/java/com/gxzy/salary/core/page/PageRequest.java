@@ -44,4 +44,13 @@ public class PageRequest {
 	public ColumnFilter getColumnFilter(String name) {
 		return columnFilters.get(name);
 	}
+
+	@Override
+	public String toString() {
+		return "PageRequest{" +
+				"pageNum=" + pageNum +
+				", pageSize=" + pageSize +
+				", columnFilters=" + columnFilters +
+				'}';
+	}
 }

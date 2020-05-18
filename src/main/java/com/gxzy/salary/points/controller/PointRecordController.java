@@ -4,7 +4,10 @@ package com.gxzy.salary.points.controller;
 import com.gxzy.salary.basic.vo.BasicFilterVo;
 import com.gxzy.salary.controller.SysUserController;
 import com.gxzy.salary.core.http.HttpResult;
+import com.gxzy.salary.core.page.ColumnFilter;
+import com.gxzy.salary.core.page.MybatisPageHelper;
 import com.gxzy.salary.core.page.PageRequest;
+import com.gxzy.salary.core.page.PageResult;
 import com.gxzy.salary.points.model.PointRecord;
 import com.gxzy.salary.points.service.PointRecordService;
 import com.gxzy.salary.service.SysUserService;
@@ -34,7 +37,6 @@ public class PointRecordController {
     // 分页查询
     @PostMapping(value="/findPage")
     public HttpResult findPage(@RequestBody PageRequest pageRequest) {
-        logger.info("积分记录分页查询");
         return HttpResult.ok(pointRecordService.findPage(pageRequest));
     }
     // 条件查询
@@ -43,15 +45,14 @@ public class PointRecordController {
         logger.info("积分记录条件查询"+filterVo);
         return HttpResult.ok(pointRecordService.findByCondition(filterVo));
     }
-<<<<<<< HEAD
+
     // 条件查询
     @GetMapping(value="/findAll")
     public HttpResult findAll() {
         logger.info("积分记录查询全部");
         return HttpResult.ok(pointRecordService.findAll());
     }
-=======
->>>>>>> ccabb361d0170a600af9d6d42c4f9ab2ebd2dd52
+
     @PostMapping(value="/findByPageCondition")
     public HttpResult findByPageCondition(@RequestBody BasicFilterVo filterVo) {
         logger.info("积分记录条件分页查询"+filterVo);
@@ -76,4 +77,25 @@ public class PointRecordController {
             logger.info("积分记录删除"+id);
             return HttpResult.ok(pointRecordService.deleteById(id));
         }
+
+        // 查询汇总记录
+    @PostMapping(value="/findSummary")
+    public HttpResult findSummary(@RequestBody BasicFilterVo filterVo) {
+        logger.info("查询汇总记录"+filterVo);
+        return HttpResult.ok(pointRecordService.findSummary(filterVo));
+    }
+
+    /**
+     * 获取过滤字段的值
+     * @param filterName
+     * @return
+     */
+    public String getColumnFilterValue(PageRequest pageRequest, String filterName) {
+        String value = null;
+        ColumnFilter columnFilter = pageRequest.getColumnFilter(filterName);
+        if(columnFilter != null) {
+            value = columnFilter.getValue();
+        }
+        return value;
+    }
 }

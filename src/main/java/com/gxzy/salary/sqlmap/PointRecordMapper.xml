@@ -8,6 +8,7 @@
         <result column="name" property="name" />
         <result column="item_id" property="itemId" />
         <result column="item_name" property="itemName" />
+        <result column="item_extend" property="itemExtend" />
         <result column="score" property="score" />
         <result column="level" property="level" />
         <result column="grade" property="grade" />
@@ -28,16 +29,19 @@
         id, eno, name, item_id, score, level, grade, `desc`, comment, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
     </sql>
     <sql id="Join_Column_List">
-        pr.id, pr.eno, pr.name, pr.item_id, mi.item as item_name,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
+        pr.id, pr.eno, pr.name, pr.item_id, mi.item as item_name,mi.extend as item_extend,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
+    </sql>
+    <sql id="Add_Join_Column_List">
+        pr.id, pr.eno, pr.name, pi.political,pr.item_id, mi.item as item_name,mi.extend as item_extend,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
     </sql>
 
     <select id="findPage"  resultMap="BaseResultMap">
         select
-        <include refid="Join_Column_List" />
+        <include refid="Add_Join_Column_List" />
         from point_record pr
         left join module_item mi on pr.item_id=mi.id
+        left join person_info pi on pr.name=pi.name
         order by pr.create_time desc,pr.last_update_time desc
-<<<<<<< HEAD
     </select>
 <!--    selectAll-->
     <select id="selectAll"  resultMap="BaseResultMap">
@@ -46,9 +50,8 @@
         from point_record pr
         left join module_item mi on pr.item_id=mi.id
         order by pr.create_time desc,pr.last_update_time desc
-=======
->>>>>>> ccabb361d0170a600af9d6d42c4f9ab2ebd2dd52
     </select>
+
 
 
 <!--    条件查询 selectByCondition-->
@@ -61,6 +64,10 @@
         <if test="name != null and name!=''" >
             AND
             pr.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="itemId != null and itemId!=''" >
+            AND
+            pr.item_id = #{itemId,jdbcType=BIGINT}
         </if>
         <if test="sTime != null and sTime!=''">
             AND
@@ -236,5 +243,52 @@
         delete from point_record
         where id = #{id,jdbcType=BIGINT}
     </delete>
+
+<!--    selectNames 条件查询所有的姓名-->
+    <select id="selectNames"  parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultType="java.lang.String">
+        select distinct pr.name
+        from point_record pr
+        where 1=1
+        <if test="name != null and name!=''" >
+            AND
+            pr.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="sTime != null and sTime!=''">
+            AND
+            pr.create_time &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null and eTime!=''">
+            AND
+            pr.create_time &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+        group by pr.name
+    </select>
+
+
+<!--    findPageByFilter-->
+    <select id="findPageByFilter" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <bind name="patternName" value="'%' + _parameter.name + '%'" />
+        <bind name="patternItemId" value="'%' + _parameter.itemId + '%'" />
+        select
+        <include refid="Add_Join_Column_List" />
+        from point_record pr
+        left join module_item mi on pr.item_id=mi.id
+        left join person_info pi on pr.name=pi.name
+        where pr.name like #{patternName}
+        and pr.item_id like #{patternItemId}
+        <if test="political != null and political!=''">
+            AND
+            pi.political = #{political,jdbcType=VARCHAR}
+        </if>
+        <if test="sTime != null and sTime!=''">
+            AND
+            pr.create_time &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null and eTime!=''">
+            AND
+            pr.create_time &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+        order by pr.create_time desc,pr.last_update_time desc
+    </select>
 
 </mapper>

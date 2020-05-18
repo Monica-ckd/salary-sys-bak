@@ -19,6 +19,7 @@ public class BasicFilterVo {
     private String eTime; // 终止时间
     private BigDecimal amount; // 输入的产量
     private String monthTime; // 月份时间 当月第一天
+    private Long itemId; // 积分模块ItemID
 
 
 
@@ -64,8 +65,9 @@ public class BasicFilterVo {
                 ", createTime='" + createTime + '\'' +
                 ", sTime='" + sTime + '\'' +
                 ", eTime='" + eTime + '\'' +
-                ", amount='" + amount + '\'' +
+                ", amount=" + amount +
                 ", monthTime='" + monthTime + '\'' +
+                ", itemId=" + itemId +
                 '}';
     }
 
@@ -172,4 +174,11 @@ public class BasicFilterVo {
         this.eTime = eTime;
     }
 
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 }

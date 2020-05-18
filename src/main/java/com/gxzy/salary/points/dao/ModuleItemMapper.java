@@ -3,6 +3,8 @@ package com.gxzy.salary.points.dao;
 import com.gxzy.salary.points.model.ModuleItem;
 import com.gxzy.salary.intface.BasicMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 积分项目表 Mapper 接口
@@ -13,4 +15,5 @@ import com.gxzy.salary.intface.BasicMapper;
  */
 public interface ModuleItemMapper extends BasicMapper<ModuleItem> {
 
+    List selectForTable();
 }

@@ -54,6 +54,18 @@ public class PointRecord extends Model<PointRecord> {
     private String itemName;
 
     /**
+     * 项目模块名称
+     */
+    @TableField(exist=false)
+    private String itemExtend;
+
+    /**
+     * 政治面貌
+     */
+    @TableField(exist=false)
+    private String political;
+
+    /**
      * 分值
      */
     private Integer score;

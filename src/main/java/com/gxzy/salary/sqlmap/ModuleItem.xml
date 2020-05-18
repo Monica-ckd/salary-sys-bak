@@ -24,6 +24,7 @@
         id, parent_id, `item`, `desc`, `comment`, extend, field, status, create_by, create_time, last_update_by, last_update_time, del_flag
     </sql>
 
+
     <!--    selectAll-->
     <select id="selectAll"  resultMap="BaseResultMap">
         select
@@ -167,4 +168,13 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+<!--    selectForTable-->
+    <select id="selectForTable"  resultType="java.lang.String">
+        select
+        mi.extend,mi.item
+        from module_item mi
+        where 1=1
+        order by mi.id
+    </select>
 </mapper>
