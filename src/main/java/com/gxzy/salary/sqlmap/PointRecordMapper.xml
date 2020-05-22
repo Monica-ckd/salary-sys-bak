@@ -30,9 +30,12 @@
     </sql>
     <sql id="Join_Column_List">
         pr.id, pr.eno, pr.name, pr.item_id, mi.item as item_name,mi.extend as item_extend,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
+<<<<<<< HEAD
     </sql>
     <sql id="Add_Join_Column_List">
         pr.id, pr.eno, pr.name, pi.political,pr.item_id, mi.item as item_name,mi.extend as item_extend,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
+=======
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
     </sql>
 
     <select id="findPage"  resultMap="BaseResultMap">
@@ -246,7 +249,11 @@
 
 <!--    selectNames 条件查询所有的姓名-->
     <select id="selectNames"  parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultType="java.lang.String">
+<<<<<<< HEAD
         select distinct pr.name
+=======
+        select pr.name
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
         from point_record pr
         where 1=1
         <if test="name != null and name!=''" >
@@ -265,6 +272,7 @@
     </select>
 
 
+<<<<<<< HEAD
 <!--    findPageByFilter-->
     <select id="findPageByFilter" parameterType="java.lang.String" resultMap="BaseResultMap">
         <bind name="patternName" value="'%' + _parameter.name + '%'" />
@@ -291,4 +299,6 @@
         order by pr.create_time desc,pr.last_update_time desc
     </select>
 
+=======
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
 </mapper>
