@@ -157,6 +157,7 @@ public class PointRecordServiceImpl implements PointRecordService {
         List<PointRecord> pointRecords = pointRecordMapper.selectByCondition(filterVo);
         for (PointRecord record:pointRecords) {
             // 分值
+<<<<<<< HEAD
             Integer orgScore = record.getScore();
             if(orgScore == null || orgScore == 0)
             {
@@ -181,17 +182,38 @@ public class PointRecordServiceImpl implements PointRecordService {
                 scoreMap.put(itemExtend,scoreMap.get(itemExtend).intValue()+score);
             }
 
+=======
+            int score = record.getScore().intValue();
+            if(score == 0)
+            {
+                continue;
+            }
+            // item别名 方便前端映射
+            String itemExtend = record.getItemExtend();
+            PointSummaryEntity entity = pointIndexMap.get(record.getName());
+            HashMap<String,Integer> scoreMap = entity.getScoreMap();
+            // 更新分数
+            scoreMap.put(itemExtend,scoreMap.get(itemExtend).intValue()+score);
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
             // 更新总分
             entity.setSummary(entity.getSummary()+score);
             // 更新PointSummaryEntity
             entity.setScoreMap(scoreMap);
             pointIndexMap.put(record.getName(),entity);
         }
+<<<<<<< HEAD
         // 遍历map,构造返回List
+=======
+        // 遍历map,构造返回Lsit
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
         Set<String> keySet=pointIndexMap.keySet();
         for(String key:keySet){
             summaryEntities.add(pointIndexMap.get(key));
         }
+<<<<<<< HEAD
+=======
+        logger.info("***findSummary***"+summaryEntities.toArray());
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
         return summaryEntities;
     }
 
@@ -200,6 +222,7 @@ public class PointRecordServiceImpl implements PointRecordService {
         logger.info("****initIndexMap***");
         // 获取所有的姓名
         List<String> names = pointRecordMapper.selectNames(filterVo);
+<<<<<<< HEAD
         int count = names==null?0:names.size();
         logger.info("names"+count);
         for (String name:names) {
@@ -207,6 +230,14 @@ public class PointRecordServiceImpl implements PointRecordService {
             pointIndexMap.put(name.trim(),entity);
         }
         logger.info("****initIndexMap**pointIndexMap*"+pointIndexMap.size());
+=======
+        logger.info("names"+names.toArray());
+        for (String name:names) {
+            PointSummaryEntity entity = initSumEntity(name);
+            pointIndexMap.put(name,entity);
+        }
+        logger.info("****initIndexMap**pointIndexMap*"+pointIndexMap);
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
     }
 
     /**
@@ -217,12 +248,20 @@ public class PointRecordServiceImpl implements PointRecordService {
     private PointSummaryEntity initSumEntity(String name) {
         logger.info("****initSumEntity***");
         PointSummaryEntity summaryEntity = new PointSummaryEntity();
+<<<<<<< HEAD
         // 去空
         summaryEntity.setName(name.trim());
         summaryEntity.setSummary(0);
         HashMap<String, Integer> scoreMap = initScoreMap();
         summaryEntity.setScoreMap(scoreMap);
         logger.info("****initSumEntity***"+summaryEntity.getName());
+=======
+        summaryEntity.setName(name);
+        summaryEntity.setSummary(0);
+        HashMap<String, Integer> scoreMap = initScoreMap();
+        summaryEntity.setScoreMap(scoreMap);
+        logger.info("****initSumEntity***"+summaryEntity);
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
         return summaryEntity;
     }
 
@@ -236,12 +275,17 @@ public class PointRecordServiceImpl implements PointRecordService {
         //获取项目模块配置列表
         List<ModuleItem> moduleItems = moduleItemMapper.selectAll();
         for (ModuleItem moduleItem:moduleItems) {
+<<<<<<< HEAD
             scoreMap.put(moduleItem.getExtend(),null);
+=======
+            scoreMap.put(moduleItem.getExtend(),0);
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
         }
         logger.info("initScoreMap end"+scoreMap);
         return scoreMap;
     }
 
+<<<<<<< HEAD
     /**
      * 获取过滤字段的值
      * @param filterName
@@ -257,4 +301,6 @@ public class PointRecordServiceImpl implements PointRecordService {
     }
 
 
+=======
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
 }

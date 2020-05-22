@@ -77,6 +77,7 @@ public class PointRecordController {
             logger.info("积分记录删除"+id);
             return HttpResult.ok(pointRecordService.deleteById(id));
         }
+<<<<<<< .mine
 
         // 查询汇总记录
     @PostMapping(value="/findSummary")
@@ -98,4 +99,27 @@ public class PointRecordController {
         }
         return value;
     }
+=======
+
+        // 查询汇总记录
+    @PostMapping(value="/findSummary")
+    public HttpResult findSummary(@RequestBody BasicFilterVo filterVo) {
+        logger.info("查询汇总记录"+filterVo);
+        return HttpResult.ok(pointRecordService.findSummary(filterVo));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
 }

@@ -60,12 +60,15 @@ public class PointRecord extends Model<PointRecord> {
     private String itemExtend;
 
     /**
+<<<<<<< HEAD
      * 政治面貌
      */
     @TableField(exist=false)
     private String political;
 
     /**
+=======
+>>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
      * 分值
      */
     private Integer score;
