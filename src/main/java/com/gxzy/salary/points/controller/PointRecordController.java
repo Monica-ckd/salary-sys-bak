@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -77,14 +78,6 @@ public class PointRecordController {
             logger.info("积分记录删除"+id);
             return HttpResult.ok(pointRecordService.deleteById(id));
         }
-<<<<<<< .mine
-
-        // 查询汇总记录
-    @PostMapping(value="/findSummary")
-    public HttpResult findSummary(@RequestBody BasicFilterVo filterVo) {
-        logger.info("查询汇总记录"+filterVo);
-        return HttpResult.ok(pointRecordService.findSummary(filterVo));
-    }
 
     /**
      * 获取过滤字段的值
@@ -99,8 +92,6 @@ public class PointRecordController {
         }
         return value;
     }
-=======
-
         // 查询汇总记录
     @PostMapping(value="/findSummary")
     public HttpResult findSummary(@RequestBody BasicFilterVo filterVo) {
@@ -108,18 +99,21 @@ public class PointRecordController {
         return HttpResult.ok(pointRecordService.findSummary(filterVo));
     }
 
+    @PostMapping(value = "/upPointsExecl")
+    public HttpResult uploadPointsExecl(@RequestParam("file") MultipartFile file) {
 
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
+        String fileName = file.getOriginalFilename();
+        logger.info("*********积分execl文件上传解析开始***********"+fileName);
+        try {
+            if (pointRecordService.batchImport(fileName, file))
+            {
+                return  HttpResult.ok();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return HttpResult.error(e.getMessage());
+        }
+        return  HttpResult.error();
+    }
 }

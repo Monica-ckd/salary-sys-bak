@@ -1,11 +1,10 @@
 package com.gxzy.salary.points.service;
 
 import com.gxzy.salary.basic.vo.BasicFilterVo;
-import com.gxzy.salary.core.page.PageRequest;
 import com.gxzy.salary.core.page.PageResult;
 import com.gxzy.salary.intface.EnCurdService;
 import com.gxzy.salary.points.model.PointRecord;
-import com.gxzy.salary.intface.CurdService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,4 +27,5 @@ public interface PointRecordService extends EnCurdService<PointRecord> {
 
     List findSummary(BasicFilterVo filterVo);
 
+    boolean batchImport(String fileName, MultipartFile file);
 }

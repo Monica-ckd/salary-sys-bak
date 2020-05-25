@@ -30,12 +30,9 @@
     </sql>
     <sql id="Join_Column_List">
         pr.id, pr.eno, pr.name, pr.item_id, mi.item as item_name,mi.extend as item_extend,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
-<<<<<<< HEAD
     </sql>
     <sql id="Add_Join_Column_List">
         pr.id, pr.eno, pr.name, pi.political,pr.item_id, mi.item as item_name,mi.extend as item_extend,pr.score, pr.level, pr.grade, pr.desc, pr.comment, pr.extend, pr.field, pr.status, pr.create_by, pr.create_time, pr.last_update_by, pr.last_update_time, pr.del_flag
-=======
->>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
     </sql>
 
     <select id="findPage"  resultMap="BaseResultMap">
@@ -249,11 +246,7 @@
 
 <!--    selectNames 条件查询所有的姓名-->
     <select id="selectNames"  parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultType="java.lang.String">
-<<<<<<< HEAD
         select distinct pr.name
-=======
-        select pr.name
->>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
         from point_record pr
         where 1=1
         <if test="name != null and name!=''" >
@@ -271,8 +264,6 @@
         group by pr.name
     </select>
 
-
-<<<<<<< HEAD
 <!--    findPageByFilter-->
     <select id="findPageByFilter" parameterType="java.lang.String" resultMap="BaseResultMap">
         <bind name="patternName" value="'%' + _parameter.name + '%'" />
@@ -298,7 +289,26 @@
         </if>
         order by pr.create_time desc,pr.last_update_time desc
     </select>
-
-=======
->>>>>>> fc521ba4ad6713e17257f7ff310ad1c27004f131
+<!--    insertBatch-->
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into point_record(`eno`, `name`, `item_id`, `score`, `level`, `grade`, `desc`, `comment`, `extend`, `field`,`status`,`create_by`, create_time, last_update_by, last_update_time, del_flag) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.eno, jdbcType=VARCHAR},
+            #{item.name, jdbcType=VARCHAR},
+            #{item.itemId, jdbcType=DECIMAL},
+            #{item.score, jdbcType=DECIMAL},
+            #{item.level, jdbcType=VARCHAR},
+            #{item.grade, jdbcType=VARCHAR},
+            #{item.desc, jdbcType=VARCHAR},
+            #{item.comment, jdbcType=VARCHAR},
+            #{item.extend, jdbcType=VARCHAR},
+            #{item.field, jdbcType=VARCHAR},
+            #{item.status,jdbcType=TINYINT},
+            #{item.createBy, jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.lastUpdateBy,jdbcType=VARCHAR},
+            #{item.lastUpdateTime,jdbcType=TIMESTAMP},
+            #{item.delFlag,jdbcType=TINYINT})
+        </foreach>
+    </insert>
 </mapper>

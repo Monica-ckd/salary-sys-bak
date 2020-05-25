@@ -123,4 +123,22 @@ public class ModuleItem extends Model<ModuleItem> {
         return this.id;
     }
 
+    @Override
+    public String toString() {
+        return "ModuleItem{" +
+                "id=" + id +
+                ", parentId=" + parentId +
+                ", item='" + item + '\'' +
+                ", desc='" + desc + '\'' +
+                ", comment='" + comment + '\'' +
+                ", extend='" + extend + '\'' +
+                ", field='" + field + '\'' +
+                ", status=" + status +
+                ", createBy='" + createBy + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", lastUpdateBy='" + lastUpdateBy + '\'' +
+                ", lastUpdateTime='" + lastUpdateTime + '\'' +
+                ", delFlag=" + delFlag +
+                '}';
+    }
 }
