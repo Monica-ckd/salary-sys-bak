@@ -156,7 +156,7 @@ public class PointRecordServiceImpl implements PointRecordService {
     @Override
     public List findSummary(BasicFilterVo filterVo) {
         logger.info("***findSummary***" + filterVo);
-        // 返回值
+        // 返回值 汇总结果
         List<PointSummaryEntity> summaryEntities = new ArrayList<>();
         // 名字索引
         HashMap<String, PointSummaryEntity> pointIndexMap = new HashMap<>();
@@ -179,9 +179,10 @@ public class PointRecordServiceImpl implements PointRecordService {
             }
             PointSummaryEntity entity = pointIndexMap.get(record.getName().trim());
             HashMap<String, Integer> scoreMap = entity.getScoreMap();
-            // 更新分数
+            // 更新单项分数
             Integer itemScore = scoreMap.get(itemExtend);
             int score = record.getScore().intValue();
+
             if (null == itemScore) {
                 scoreMap.put(itemExtend, score);
             } else {
@@ -190,8 +191,6 @@ public class PointRecordServiceImpl implements PointRecordService {
             if (score == 0) {
                 continue;
             }
-            // 更新分数
-            scoreMap.put(itemExtend, scoreMap.get(itemExtend).intValue() + score);
 
             // 更新总分
             entity.setSummary(entity.getSummary() + score);
@@ -228,7 +227,9 @@ public class PointRecordServiceImpl implements PointRecordService {
 
         logger.info("names" + names.toArray());
         for (String name : names) {
+            // 构造entity
             PointSummaryEntity entity = initSumEntity(name);
+            // 构造name-entity 的map
             pointIndexMap.put(name, entity);
         }
         logger.info("****initIndexMap**pointIndexMap*" + pointIndexMap);
@@ -246,8 +247,9 @@ public class PointRecordServiceImpl implements PointRecordService {
         PointSummaryEntity summaryEntity = new PointSummaryEntity();
 
         // 去空
-        summaryEntity.setName(name);
+        summaryEntity.setName(name.trim());
         summaryEntity.setSummary(0);
+        // 初始化item-分数 的map
         HashMap<String, Integer> scoreMap = initScoreMap();
         summaryEntity.setScoreMap(scoreMap);
         logger.info("****initSumEntity***" + summaryEntity);
@@ -266,10 +268,7 @@ public class PointRecordServiceImpl implements PointRecordService {
         //获取项目模块配置列表
         List<ModuleItem> moduleItems = moduleItemMapper.selectAll();
         for (ModuleItem moduleItem : moduleItems) {
-
             scoreMap.put(moduleItem.getExtend(), null);
-
-            scoreMap.put(moduleItem.getExtend(), 0);
         }
         logger.info("initScoreMap end" + scoreMap);
         return scoreMap;
