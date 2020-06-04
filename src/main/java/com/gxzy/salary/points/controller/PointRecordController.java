@@ -105,9 +105,10 @@ public class PointRecordController {
         String fileName = file.getOriginalFilename();
         logger.info("*********积分execl文件上传解析开始***********"+fileName);
         try {
-            if (pointRecordService.batchImport(fileName, file))
+            int uploadCnt = pointRecordService.batchImport(fileName, file);
+            if (uploadCnt>0)
             {
-                return  HttpResult.ok();
+                return  HttpResult.ok("成功上传"+uploadCnt+"条记录");
             }
         } catch (Exception e) {
             e.printStackTrace();

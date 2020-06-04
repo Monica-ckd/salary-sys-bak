@@ -1,6 +1,7 @@
 package com.gxzy.salary.basic.dao;
 
 import com.gxzy.salary.basic.model.DutyExcept;
+import com.gxzy.salary.basic.vo.BasicFilterVo;
 import com.gxzy.salary.intface.BasicMapper;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface DutyExceptMapper extends BasicMapper<DutyExcept> {
     List<DutyExcept> findDutyExcept(String name);
 
     List<DutyExcept> findDutyOrders(String name);
+
+    List<DutyExcept> findAllDutys(BasicFilterVo filter);
 }

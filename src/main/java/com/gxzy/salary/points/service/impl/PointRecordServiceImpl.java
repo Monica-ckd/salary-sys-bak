@@ -16,6 +16,7 @@ import com.gxzy.salary.points.model.PointSummaryEntity;
 import com.gxzy.salary.points.service.PointRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gxzy.salary.util.CommUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -167,8 +168,8 @@ public class PointRecordServiceImpl implements PointRecordService {
         List<PointRecord> pointRecords = pointRecordMapper.selectByCondition(filterVo);
         for (PointRecord record : pointRecords) {
             // 分值
-            Integer orgScore = record.getScore();
-            if (orgScore == null || orgScore == 0) {
+            float orgScore = record.getScore().floatValue();
+            if (orgScore==0.0) {
                 continue;
             }
             // item别名 方便前端映射
@@ -178,15 +179,15 @@ public class PointRecordServiceImpl implements PointRecordService {
                 logger.info("*****************************" + record.getName());
             }
             PointSummaryEntity entity = pointIndexMap.get(record.getName().trim());
-            HashMap<String, Integer> scoreMap = entity.getScoreMap();
+            HashMap<String, Float> scoreMap = entity.getScoreMap();
             // 更新单项分数
-            Integer itemScore = scoreMap.get(itemExtend);
-            int score = record.getScore().intValue();
+            Float itemScore = scoreMap.get(itemExtend);
+            float score = record.getScore().floatValue();
 
             if (null == itemScore) {
                 scoreMap.put(itemExtend, score);
             } else {
-                scoreMap.put(itemExtend, scoreMap.get(itemExtend).intValue() + score);
+                scoreMap.put(itemExtend, scoreMap.get(itemExtend) + score);
             }
             if (score == 0) {
                 continue;
@@ -250,7 +251,7 @@ public class PointRecordServiceImpl implements PointRecordService {
         summaryEntity.setName(name.trim());
         summaryEntity.setSummary(0);
         // 初始化item-分数 的map
-        HashMap<String, Integer> scoreMap = initScoreMap();
+        HashMap<String, Float> scoreMap = initScoreMap();
         summaryEntity.setScoreMap(scoreMap);
         logger.info("****initSumEntity***" + summaryEntity);
 
@@ -262,9 +263,9 @@ public class PointRecordServiceImpl implements PointRecordService {
      *
      * @return
      */
-    private HashMap<String, Integer> initScoreMap() {
+    private HashMap<String, Float> initScoreMap() {
         logger.info("initScoreMap");
-        HashMap<String, Integer> scoreMap = new HashMap<>();
+        HashMap<String, Float> scoreMap = new HashMap<>();
         //获取项目模块配置列表
         List<ModuleItem> moduleItems = moduleItemMapper.selectAll();
         for (ModuleItem moduleItem : moduleItems) {
@@ -293,27 +294,25 @@ public class PointRecordServiceImpl implements PointRecordService {
     //批量导入
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     @Override
-    public boolean batchImport(String fileName, MultipartFile file) {
-        boolean succFlag = false;
+    public int batchImport(String fileName, MultipartFile file) {
+        int succCnt = 0;
         try {
             // 获取第一个sheet
             Sheet sheet = this.checkAndGetSheet(fileName, file);
 
-            if (sheet != null) {
-                succFlag = true;
-            }
             // 获取对象 list
             int[] resultCell = new int[]{0, 1, 2, 3, 4, 5, 6, 7};//要将表中的哪几列传入数据库中，从0开始计数
             List<PointRecord> importList = getSheetVal(sheet, resultCell);
             // 持久化对象List
-            System.out.println("结果集---" + importList);
+            // System.out.println("结果集---" + importList);
             // test mapper
-            pointRecordMapper.insertBatch(importList);
+            succCnt = pointRecordMapper.insertBatch(importList);
+//            logger.info("insertBatch"+cnt);
         } catch (Exception e) {
             e.printStackTrace();
-            succFlag = false;
+            succCnt = 0;
         }
-        return succFlag;
+        return succCnt;
 
     }
 
@@ -325,49 +324,46 @@ public class PointRecordServiceImpl implements PointRecordService {
         PointRecord pointRecord;
         for (int r = 1; r <= sheet.getLastRowNum(); r++) {
             Row row = sheet.getRow(r);
-            if (row == null) {
-                continue;
+            // name 为空
+            if (row == null || row.getCell(0) ==null || "".equals(row.getCell(0))) {
+                break;
             }
             pointRecord = new PointRecord();
             // 名字	项目	分数	描述	日期	级别	等级	记录人
             for (int i = 0; i <= row.getPhysicalNumberOfCells(); i++) {
                 Object temp = getCellVal(row.getCell(i));
-                // name 为空
-                if(i==0 && (temp==null || "".equals(temp.toString())))
-                {
-                    break;
-                }
+                logger.info(temp.toString());
                 for (int j = 0; j < resultCell.length; j++) {
                     if (i == resultCell[j]) {
                         switch (i) {
                             case 0:
-                                pointRecord.setName(temp.toString());
+                                pointRecord.setName(temp.toString().trim());
                                 break;
                             case 1:
-                                Long itemId = itemMap.get(temp.toString());
-                                logger.info("***getSheetVal***" + itemId);
+                                Long itemId = itemMap.get(temp.toString().trim());
+                                logger.debug("***getSheetVal***" + itemId);
                                 pointRecord.setItemId(itemId);
                                 break;
                             case 2:
-                                pointRecord.setScore(new Integer(temp.toString()));
+                                pointRecord.setScore(new BigDecimal(temp.toString().trim()));
                                 break;
                             case 3:
                                 pointRecord.setDesc(temp.toString());
                                 break;
-
                             case 4:
-                                logger.info("***getDate***" + temp.toString());
-                                pointRecord.setCreateTime(temp.toString());
+                                logger.debug("*****level ***" + temp.toString());
+                                pointRecord.setLevel(temp.toString().trim());
                                 break;
                             case 5:
-                                pointRecord.setLevel(temp.toString());
+                                logger.debug("*****Grade ***" + temp.toString());
+                                pointRecord.setGrade(temp.toString().trim());
                                 break;
                             case 6:
-                                logger.info("*****Grade ***" + temp.toString());
-                                pointRecord.setGrade(temp.toString());
+                                logger.debug("***getDate***" + temp.toString());
+                                pointRecord.setCreateTime(temp.toString().trim());
                                 break;
                             case 7:
-                                pointRecord.setCreateBy(temp.toString());
+                                pointRecord.setCreateBy(temp.toString().trim());
                                 break;
                             default:
                                 break;
@@ -380,10 +376,10 @@ public class PointRecordServiceImpl implements PointRecordService {
             // 取当前系统时间 作为上传时间
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
             pointRecord.setLastUpdateTime(df.format(new Date()));// new Date()为获取当前系统时间
-            logger.info("=====================:" + pointRecord.toString());
+            logger.debug("=====================:" + pointRecord.toString());
             resultList.add(pointRecord);
         }
-        logger.info("end moethod: getSheetVal return:" + resultList);
+        logger.debug("end moethod: getSheetVal return:" + resultList);
         return resultList;
     }
 
@@ -392,7 +388,6 @@ public class PointRecordServiceImpl implements PointRecordService {
         // 查询数据库
         List<ModuleItem> itemList = moduleItemMapper.selectAll();
         for (ModuleItem item : itemList) {
-            logger.info(item.toString());
             resMap.put(item.getItem(), item.getId());
         }
         return resMap;
@@ -412,9 +407,16 @@ public class PointRecordServiceImpl implements PointRecordService {
                 obj = cell.getErrorCellValue();
                 break;
             case Cell.CELL_TYPE_NUMERIC:
-                // 防止把1 取成1.0
-                cell.setCellType(Cell.CELL_TYPE_STRING);
-                obj = cell.getStringCellValue();
+                // 判断是否是日期参数类型
+                if(HSSFDateUtil.isCellDateFormatted(cell)){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    obj = sdf.format(HSSFDateUtil.getJavaDate(cell.getNumericCellValue()));
+                    logger.info("obj");
+                }else {
+                    // 防止把1 取成1.0
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    obj = cell.getStringCellValue();
+                }
                 break;
             case Cell.CELL_TYPE_STRING:
                 obj = cell.getStringCellValue();

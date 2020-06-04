@@ -15,7 +15,6 @@
         <result column="del_flag" property="delFlag" />
         <result column="comment" property="comment" />
     </resultMap>
-
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, `position`, post_type, salary_point, salary_rate, create_time, last_update_by, last_update_time, del_flag, comment
@@ -44,7 +43,7 @@
         <include refid="Base_Column_List" />
         from basic_position bp
         where 1=1
-        and  bp.post_type = #{postType,jdbcType=INTEGER};
+        and  bp.post_type &lt;= #{postType,jdbcType=INTEGER};
     </select>
 
 

@@ -267,14 +267,16 @@
 <!--    findPageByFilter-->
     <select id="findPageByFilter" parameterType="java.lang.String" resultMap="BaseResultMap">
         <bind name="patternName" value="'%' + _parameter.name + '%'" />
-        <bind name="patternItemId" value="'%' + _parameter.itemId + '%'" />
         select
         <include refid="Add_Join_Column_List" />
         from point_record pr
         left join module_item mi on pr.item_id=mi.id
         left join person_info pi on pr.name=pi.name
         where pr.name like #{patternName}
-        and pr.item_id like #{patternItemId}
+        <if test="itemId != null and itemId!=''" >
+            AND
+            pr.item_id = #{itemId,jdbcType=BIGINT}
+        </if>
         <if test="political != null and political!=''">
             AND
             pi.political = #{political,jdbcType=VARCHAR}

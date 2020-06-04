@@ -37,7 +37,7 @@ public class BasicPositionController {
 
     @GetMapping(value = "/findAllOperator")
     public HttpResult findAllOperator() {
-        logger.info("******findAllOperator 查询所有操作岗位*******");
+        logger.info("******findAllOperator 查询所有非管理岗位*******");
         return HttpResult.ok(basicPositionService.findAllOperator());
     }
 

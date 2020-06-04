@@ -10,9 +10,9 @@ public class PointSummaryEntity {
     private String eno;
     private String name;
     // 总分
-    private int summary;
+    private float summary;
     //[itemName,score]
-    private HashMap<String,Integer> scoreMap;
+    private HashMap<String,Float> scoreMap;
 
     public String getEno() {
         return eno;
@@ -22,11 +22,11 @@ public class PointSummaryEntity {
         return name;
     }
 
-    public int getSummary() {
+    public float getSummary() {
         return summary;
     }
 
-    public HashMap<String, Integer> getScoreMap() {
+    public HashMap<String, Float> getScoreMap() {
         return scoreMap;
     }
 
@@ -38,11 +38,11 @@ public class PointSummaryEntity {
         this.name = name;
     }
 
-    public void setSummary(int summary) {
+    public void setSummary(float summary) {
         this.summary = summary;
     }
 
-    public void setScoreMap(HashMap<String, Integer> scoreMap) {
+    public void setScoreMap(HashMap<String, Float> scoreMap) {
         this.scoreMap = scoreMap;
     }
 

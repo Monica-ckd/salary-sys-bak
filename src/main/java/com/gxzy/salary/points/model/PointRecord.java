@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -68,7 +70,7 @@ public class PointRecord extends Model<PointRecord> {
     /**
      * 分值
      */
-    private Integer score;
+    private BigDecimal score;
 
     /**
      * 级别 公司，厂级，车间级...

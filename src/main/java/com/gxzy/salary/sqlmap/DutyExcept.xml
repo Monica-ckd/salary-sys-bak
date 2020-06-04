@@ -20,16 +20,18 @@
         <result column="last_update_time" property="lastUpdateTime" />
         <result column="del_flag" property="delFlag" />
         <result column="comment" property="comment" />
+        <result column="status" property="status" />
+        <result column="describe" property="describe" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, `name`, `group`, abs_id, sTime, eTime, create_time, create_by, check_state, abnmal_state, parent_id, last_update_by, last_update_time, del_flag, comment
+        id, `name`, `group`, abs_id, sTime, eTime, create_time, create_by, check_state, abnmal_state, parent_id, last_update_by, last_update_time, del_flag, comment,status,`describe`
     </sql>
 
     <!-- join查询结果列 -->
     <sql id="Join_Column_List">
-        de.id, de.`name`, de.`group`, de.abs_id, ai.abs_desc, de.sTime, de.eTime, de.create_time, de.create_by, de.check_state, de.abnmal_state, de.parent_id, de.last_update_by, de.last_update_time, de.del_flag, de.comment
+        de.id, de.`name`, de.`group`, de.abs_id, ai.abs_desc, de.sTime, de.eTime, de.create_time, de.create_by, de.check_state, de.abnmal_state, de.parent_id, de.last_update_by, de.last_update_time, de.del_flag, de.comment,de.status,de.describe
     </sql>
 
 <!--    findDutyExcept -->
@@ -116,6 +118,12 @@
             <if test="delFlag != null">
                 del_flag,
             </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="describe != null">
+                `describe`,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -159,6 +167,12 @@
             </if>
             <if test="delFlag != null">
                 #{delFlag,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="describe != null">
+                #{describe,jdbcType=VARCHAR}
             </if>
         </trim>
     </insert>
@@ -209,8 +223,45 @@
             <if test="comment != null">
                 comment = #{comment,jdbcType=VARCHAR},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="describe != null">
+                `describe` = #{describe,jdbcType=VARCHAR}
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+<!--    findAllDutys -->
+    <select id="findAllDutys" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        from duty_except de
+        LEFT JOIN absence_info ai ON de.abs_id = ai.id
+        where 1=1
+        AND de.parent_id = '0'
+        <if test="name != null and name!=''" >
+            AND
+            de.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="group != null and group!=''" >
+            AND
+             de.group = #{group,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status!=''" >
+            AND
+            de.status = #{status,jdbcType=TINYINT}
+        </if>
+        <if test="sTime != null and sTime!=''">
+            AND
+            de.sTime &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null and eTime!=''">
+            AND
+            de.eTime &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+        order by de.create_time desc
+    </select>
 
 </mapper>

@@ -20,6 +20,7 @@ public class BasicFilterVo {
     private BigDecimal amount; // 输入的产量
     private String monthTime; // 月份时间 当月第一天
     private Long itemId; // 积分模块ItemID
+    private Integer status; // 当前order 确认审批状态
 
 
 
@@ -41,16 +42,20 @@ public class BasicFilterVo {
         this.createTime = createTime;
     }
 
-    public BasicFilterVo(String name, String group, String machineno, Long mid, String brand, Object extend, String createTime, String sTime, String eTime) {
+    public BasicFilterVo(String name, String group, String machineno, Long mid, String brand, Object extend, String createTime, String sTime, String eTime, BigDecimal amount, String monthTime, Long itemId, Integer status) {
         this.name = name;
         this.group = group;
         this.machineno = machineno;
         this.mid = mid;
-        this.brand = convBrand(brand);
+        this.brand = brand;
         this.extend = extend;
         this.createTime = createTime;
         this.sTime = sTime;
         this.eTime = eTime;
+        this.amount = amount;
+        this.monthTime = monthTime;
+        this.itemId = itemId;
+        this.status = status;
     }
 
     @Override
@@ -68,6 +73,7 @@ public class BasicFilterVo {
                 ", amount=" + amount +
                 ", monthTime='" + monthTime + '\'' +
                 ", itemId=" + itemId +
+                ", status=" + status +
                 '}';
     }
 
@@ -180,5 +186,13 @@ public class BasicFilterVo {
 
     public void setItemId(Long itemId) {
         this.itemId = itemId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

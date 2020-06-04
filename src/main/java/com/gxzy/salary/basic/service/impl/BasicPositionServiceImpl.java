@@ -36,7 +36,7 @@ public class BasicPositionServiceImpl implements BasicPositionService {
 
     @Override
     public List<BasicPosition> findAllOperator() {
-        int postType = 0;// 操作岗
+        int postType = 2;// 操作岗 1 维修 2班组管理 3 车间管理
         return basicPositionMapper.findByPostType(postType);
     }
 

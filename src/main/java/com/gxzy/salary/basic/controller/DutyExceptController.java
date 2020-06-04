@@ -87,4 +87,11 @@ public class DutyExceptController {
         return HttpResult.ok(dutyExceptService.orderDeny(record));
     }
 
+    @PostMapping(value = "/findAllDutys")
+    public HttpResult findAllDutys(@RequestBody BasicFilterVo filter) {
+        // 查询当前登陆用户下待审批考勤数据修改申请单
+        logger.info("******findDutyOrders*******"+filter);
+        return HttpResult.ok(dutyExceptService.findAllDutys(filter));
+    }
+
 }

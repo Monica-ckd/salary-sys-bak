@@ -32,4 +32,6 @@ public interface DutyExceptService extends CurdService<DutyExcept> {
     int batchOrderConfirm(List<DutyExcept> records);
 
     int orderDeny(DutyExcept record);
+
+ List<DutyExcept> findAllDutys(BasicFilterVo filter);
 }

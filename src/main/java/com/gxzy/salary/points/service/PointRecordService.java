@@ -27,5 +27,5 @@ public interface PointRecordService extends EnCurdService<PointRecord> {
 
     List findSummary(BasicFilterVo filterVo);
 
-    boolean batchImport(String fileName, MultipartFile file);
+    int batchImport(String fileName, MultipartFile file);
 }

@@ -2,6 +2,7 @@
 package com.gxzy.salary.basic.service.impl;
 
 import com.gxzy.salary.basic.dao.PostChangeInfoMapper;
+import com.gxzy.salary.basic.model.DutyExcept;
 import com.gxzy.salary.basic.model.PostChangeInfo;
 import com.gxzy.salary.basic.service.PostChangeInfoService;
 import com.gxzy.salary.basic.vo.BasicFilterVo;
@@ -42,6 +43,11 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         return  postChangeInfoMapper.findPostChange(filter.getName());
     }
 
+    /**
+     * 员工确认顶岗信息
+     * @param records
+     * @return
+     */
     @Override
     public int confirmPostExcept(List<PostChangeInfo> records) {
         for(PostChangeInfo record : records) {
@@ -52,14 +58,21 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         }
         return 1;
     }
+
+    /**
+     * 申请修改个人顶岗数据 新增修改订单
+     * @param record
+     * @return
+     */
     @Transactional(readOnly=false,rollbackFor=Exception.class)
     @Override
     public int askUpdatePost(PostChangeInfo record) {
         logger.info("askUpdateDuty service****"+record);
         // 原数据设置异常 abnmalState = -1
-        postChangeInfoMapper.updateAbnmalState(record);
-
-        // 新增考勤修正申请
+        // 查找原数据
+        PostChangeInfo oldRecord = postChangeInfoMapper.selectById(record.getId());
+        oldRecord = buildRecord(oldRecord,0,-1,0);
+        postChangeInfoMapper.updateByPrimaryKeySelective(oldRecord);
         record.setParentId(record.getId());
         record.setId(null);
         record = buildRecord(record,0,-1,0);
@@ -74,14 +87,32 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         return postChangeInfoMapper.findPostOrders(filter.getName());
     }
 
+    /**
+     * 管理人员新增顶岗数据
+     * @param record
+     * @return
+     */
     @Override
     public int addEmpPost(PostChangeInfo record) {
-        // 取当前系统时间
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        record.setCreateTime(df.format(new Date()));// new Date()为获取当前系统时间
-        logger.info("addPostChangeInfo service"+record);
-        return postChangeInfoMapper.insertSelective(record);
+        if(record.getId() == 0) { // 新增
+            // 取当前系统时间
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            record.setCreateTime(df.format(new Date()));// new Date()为获取当前系统时间
+            record.setStatus(100);
+            record.setDescribe("待员工确认");
+            logger.info("addPostChangeInfo service" + record);
+            return postChangeInfoMapper.insertSelective(record);
+        }
+        else{ // 修改
+            return postChangeInfoMapper.updateByPrimaryKeySelective(record);
+        }
     }
+
+    /**
+     * 管理审核确认
+     * @param records
+     * @return
+     */
     @Transactional(readOnly=false,rollbackFor=Exception.class)
     @Override
     public int batchOrderConfirm(List<PostChangeInfo> records) {
@@ -97,11 +128,12 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         }
         return 1;
     }
+
     private PostChangeInfo buildParentRecord(PostChangeInfo record) {
-        // 恢复init
-        record = buildRecord(record,0,0,0);
-        // id
+
         record.setId(record.getParentId());
+        // 恢复init，确认
+        record = buildRecord(record,1,0,-1);
         record.setParentId(0L);
         logger.info("parent Record ****"+record);
         return  record;
@@ -122,6 +154,40 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         record.setCheckState(checkState);
         record.setAbnmalState(abnmalState);
         record.setDelFlag(delFlag);
+        // 父记录
+        // 父记录
+        if(record.getParentId() == 0)
+        {
+            if(checkState+abnmalState == 1)
+            {
+                record.setStatus(101);
+                record.setDescribe("已确认，完成");
+            }else if(checkState+abnmalState == -1)
+            {
+                record.setStatus(102);
+                record.setDescribe("提起异常，待管理审批");
+            } else
+            {
+                // (checkState+abnmalState == 0)
+                record.setStatus(100);
+                record.setDescribe("待员工确认");
+            }
+        }
+        // 子记录
+        else{
+            if(checkState==-1 && abnmalState==0)
+            {
+                record.setStatus(104);
+                record.setDescribe("管理审批驳回，待员工确认");
+            }else if(checkState==0 && abnmalState==-1)
+            {
+                record.setStatus(102);
+                record.setDescribe("提起异常，待管理审批");
+            }else{
+                record.setStatus(103);
+                record.setDescribe("管理审批通过，完成");
+            }
+        }
         logger.info("build record after***"+ record);
         return  record;
     }
@@ -129,7 +195,23 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
     public int orderDeny(PostChangeInfo record) {
         // check_state = -1
         buildRecord(record,-1,0,0);
-        return postChangeInfoMapper.updateByPrimaryKeySelective(record);
+        postChangeInfoMapper.updateByPrimaryKeySelective(record);
+        // 更新父记录 回显给用户
+        PostChangeInfo oldRecord = postChangeInfoMapper.selectById(record.getParentId());
+        oldRecord = buildRecord(oldRecord,0,0,0);
+        postChangeInfoMapper.updateByPrimaryKeySelective(oldRecord);
+        return 1;
+    }
+
+    /**
+     * 查询所有管理创建的岗位变动记录
+     * @param filter
+     * @return
+     */
+    @Override
+    public List<PostChangeInfo> findAllPostChange(BasicFilterVo filter) {
+        logger.info("***findAllPostChange service***"+filter);
+        return  postChangeInfoMapper.findAllPostChange(filter);
     }
 
     @Override
