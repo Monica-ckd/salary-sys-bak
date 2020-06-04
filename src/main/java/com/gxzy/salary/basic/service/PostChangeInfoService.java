@@ -29,4 +29,6 @@ public interface PostChangeInfoService extends CurdService<PostChangeInfo> {
     int batchOrderConfirm(List<PostChangeInfo> records);
 
     int orderDeny(PostChangeInfo record);
+
+    List<PostChangeInfo> findAllPostChange(BasicFilterVo filter);
 }

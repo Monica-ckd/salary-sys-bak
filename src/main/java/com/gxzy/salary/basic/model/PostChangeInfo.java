@@ -118,6 +118,17 @@ public class PostChangeInfo extends Model<PostChangeInfo> {
     private Integer delFlag;
 
     /**
+     * 当前流程状态
+     */
+    private Integer status;
+
+    /**
+     * 当前流程状态描述
+     * 待员工确认=100,已确认，完成 =101,提起异常，待管理审批=102，管理审批通过，完成=103,管理审批驳回，待员工确认=104'
+     */
+    private String describe;
+
+    /**
      * 备注
      */
     private String comment;
@@ -158,6 +169,10 @@ public class PostChangeInfo extends Model<PostChangeInfo> {
     public static final String DEL_FLAG = "del_flag";
 
     public static final String COMMENT = "comment";
+
+    public static final String STATUS = "status";
+
+    public static final String DESCRIBE = "describe";
 
     @Override
     protected Serializable pkVal() {

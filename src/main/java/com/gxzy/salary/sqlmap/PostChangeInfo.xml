@@ -23,15 +23,17 @@
         <result column="last_update_time" property="lastUpdateTime" />
         <result column="del_flag" property="delFlag" />
         <result column="comment" property="comment" />
+        <result column="status" property="status" />
+        <result column="describe" property="describe" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id,`name`, `group`, machineno, wid, bpid, s_time, e_time,create_time, create_by, check_state, abnmal_state, parent_id, last_update_by, last_update_time, del_flag, comment
+        id,`name`, `group`, machineno, wid, bpid, s_time, e_time,create_time, create_by, check_state, abnmal_state, parent_id, last_update_by, last_update_time, del_flag, comment,status,`describe`
     </sql>
 
     <sql id="Join_Column_List">
-        pci.id,pci.`name`, pci.`group`, pci.machineno, pci.wid, wmd.mode, pci.bpid, bp.position, pci.s_time, pci.e_time, pci.create_time, pci.create_by, pci.check_state, pci.abnmal_state, pci.parent_id, pci.last_update_by, pci.last_update_time, pci.del_flag, pci.comment
+        pci.id,pci.`name`, pci.`group`, pci.machineno, pci.wid, wmd.mode, pci.bpid, bp.position, pci.s_time, pci.e_time, pci.create_time, pci.create_by, pci.check_state, pci.abnmal_state, pci.parent_id, pci.last_update_by, pci.last_update_time, pci.del_flag, pci.comment,pci.status,pci.describe
     </sql>
 <!-- findPostChange-->
     <select id="findPostChange" parameterType="java.lang.String" resultMap="BaseResultMap" >
@@ -134,6 +136,12 @@
             <if test="comment != null">
                 comment,
             </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="describe != null">
+                `describe`,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -186,6 +194,12 @@
             </if>
             <if test="comment != null">
                 #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="describe != null">
+                #{describe,jdbcType=VARCHAR}
             </if>
         </trim>
     </insert>
@@ -244,6 +258,12 @@
             <if test="comment != null">
                 comment = #{comment,jdbcType=VARCHAR},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="describe != null">
+                `describe` = #{describe,jdbcType=VARCHAR}
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -256,5 +276,43 @@
         </set>
         where pci.id = #{id,jdbcType=BIGINT}
     </update>
+
+<!--    findAllPostChange-->
+    <select id="findAllPostChange" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        FROM
+        (post_change_info pci
+        LEFT JOIN workmodes wmd ON pci.wid = wmd.id)
+        LEFT JOIN basic_position bp ON pci.bpid = bp.id
+        WHERE 1=1
+        AND pci.parent_id = '0'
+        <if test="name != null and name!=''" >
+            AND
+            pci.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="status != null and status!=''" >
+            AND
+            pci.status = #{status,jdbcType=TINYINT}
+        </if>
+        <if test="sTime != null and sTime!=''">
+            AND
+            pci.sTime &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null and eTime!=''">
+            AND
+            pci.eTime &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+        order by pci.create_time desc
+    </select>
+<!--selectById-->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        post_change_info pci
+        WHERE 1=1
+        AND pci.id = #{id,jdbcType=BIGINT}
+    </select>
 
 </mapper>

@@ -41,6 +41,12 @@ public class PostChangeInfoController {
         logger.info("******findPostChange*******"+filter);
         return HttpResult.ok(postChangeInfoService.findPostChange(filter));
     }
+    // 查询全部岗位变动
+    @PostMapping(value = "/findAll")
+    public HttpResult findAllPostChange(@RequestBody BasicFilterVo filter) {
+        logger.info("******findAllPostChange*******"+filter);
+        return HttpResult.ok(postChangeInfoService.findAllPostChange(filter));
+    }
 
     //批量确认个人顶岗数据 confirmDutyExecpt
     @PostMapping(value = "/confirmPostExcept")

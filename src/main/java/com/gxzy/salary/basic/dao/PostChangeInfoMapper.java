@@ -33,4 +33,6 @@ public interface PostChangeInfoMapper extends BaseMapper<PostChangeInfo> {
      * @return
      */
     List<PostChangeInfo> findPostChangeByFilter(BasicFilterVo filter);
+
+    List<PostChangeInfo> findAllPostChange(BasicFilterVo filter);
 }

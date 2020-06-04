@@ -43,6 +43,7 @@ public class DutyExceptServiceImpl implements DutyExceptService {
         return  dutyExceptMapper.findDutyExcept(filter.getName());
     }
 
+
     @Override
     public int confirmDutyExcept(List<DutyExcept> records) {
 
@@ -89,6 +90,8 @@ public class DutyExceptServiceImpl implements DutyExceptService {
         // 取当前系统时间
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         record.setCreateTime(df.format(new Date()));// new Date()为获取当前系统时间
+        record.setStatus(100);
+        record.setDescribe("待员工确认");
         logger.info("addDutyExcept service"+record);
         return dutyExceptMapper.insertSelective(record);
     }
@@ -111,7 +114,7 @@ public class DutyExceptServiceImpl implements DutyExceptService {
 
     private DutyExcept buildParentRecord(DutyExcept record) {
         // 恢复init
-        record = buildRecord(record,0,0,0);
+        record = buildRecord(record,1,0,0);
         // id
         record.setId(record.getParentId());
         record.setParentId(0L);
@@ -135,6 +138,39 @@ public class DutyExceptServiceImpl implements DutyExceptService {
         record.setCheckState(checkState);
         record.setAbnmalState(abnmalState);
         record.setDelFlag(delFlag);
+        // 父记录
+        if(record.getParentId() == 0)
+        {
+            if(checkState+abnmalState == 1)
+            {
+                record.setStatus(101);
+                record.setDescribe("已确认，完成");
+            }else if(checkState+abnmalState == -1)
+            {
+                record.setStatus(102);
+                record.setDescribe("提起异常，待管理审批");
+            } else
+            {
+                // (checkState+abnmalState == 0)
+                record.setStatus(100);
+                record.setDescribe("待员工确认");
+            }
+        }
+        // 子记录
+        else{
+           if(checkState==-1 && abnmalState==0)
+           {
+               record.setStatus(104);
+               record.setDescribe("管理审批驳回，待员工确认");
+           }else if(checkState==0 && abnmalState==-1)
+            {
+                record.setStatus(102);
+                record.setDescribe("提起异常，待管理审批");
+            }else{
+               record.setStatus(103);
+               record.setDescribe("管理审批通过，完成");
+           }
+        }
         logger.info("build record after***"+ record);
         return  record;
     }
@@ -149,7 +185,14 @@ public class DutyExceptServiceImpl implements DutyExceptService {
         oldRecord = buildRecord(oldRecord,0,0,0);
         dutyExceptMapper.updateByPrimaryKeySelective(oldRecord);
         dutyExceptMapper.updateByPrimaryKeySelective(record);
-        return 0;
+        return 1;
+    }
+
+    @Override
+    public List<DutyExcept> findAllDutys(BasicFilterVo filter) {
+        logger.info("***findAllDutys service***"+filter);
+        // 未确认，状态异常 创建人= filter.name
+        return dutyExceptMapper.findAllDutys(filter);
     }
 
     @Override
