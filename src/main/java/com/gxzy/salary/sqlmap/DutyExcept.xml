@@ -233,6 +233,7 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
 
+<<<<<<< .mine
 <!--    findAllDutys -->
     <select id="findAllDutys" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap" >
         select
@@ -264,4 +265,37 @@
         order by de.create_time desc
     </select>
 
+=======
+<!--    findAllDutys -->
+    <select id="findAllDutys" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        from duty_except de
+        LEFT JOIN absence_info ai ON de.abs_id = ai.id
+        where 1=1
+        AND de.parent_id = '0'
+        <if test="name != null and name!=''" >
+            AND
+            de.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="status != null and status!=''" >
+            AND
+            de.status = #{status,jdbcType=TINYINT}
+        </if>
+        <if test="sTime != null and sTime!=''">
+            AND
+            de.sTime &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null and eTime!=''">
+            AND
+            de.eTime &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+        order by de.create_time desc
+    </select>
+
+
+
+
+
+>>>>>>> .theirs
 </mapper>

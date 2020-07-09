@@ -87,13 +87,22 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         return postChangeInfoMapper.findPostOrders(filter.getName());
     }
 
+<<<<<<< .mine
     /**
      * 管理人员新增顶岗数据
      * @param record
      * @return
      */
+=======
+    /**
+     * 管理新增
+     * @param record
+     * @return
+     */
+>>>>>>> .theirs
     @Override
     public int addEmpPost(PostChangeInfo record) {
+<<<<<<< .mine
         if(record.getId() == 0) { // 新增
             // 取当前系统时间
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
@@ -106,6 +115,20 @@ public class PostChangeInfoServiceImpl implements PostChangeInfoService {
         else{ // 修改
             return postChangeInfoMapper.updateByPrimaryKeySelective(record);
         }
+=======
+        // 取当前系统时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        record.setCreateTime(df.format(new Date()));// new Date()为获取当前系统时间
+        record.setStatus(100);
+        record.setDescribe("待员工确认");
+        logger.info("addPostChangeInfo service"+record);
+        return postChangeInfoMapper.insertSelective(record);
+
+
+
+
+
+>>>>>>> .theirs
     }
 
     /**

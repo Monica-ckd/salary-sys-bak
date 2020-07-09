@@ -277,6 +277,7 @@
         where pci.id = #{id,jdbcType=BIGINT}
     </update>
 
+<<<<<<< .mine
 <!--    findAllPostChange-->
     <select id="findAllPostChange" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap" >
         select
@@ -319,4 +320,48 @@
         AND pci.id = #{id,jdbcType=BIGINT}
     </select>
 
+=======
+<!--    findAllPostChange-->
+    <select id="findAllPostChange" parameterType="com.gxzy.salary.basic.vo.BasicFilterVo" resultMap="BaseResultMap" >
+        select
+        <include refid="Join_Column_List" />
+        FROM
+        (post_change_info pci
+        LEFT JOIN workmodes wmd ON pci.wid = wmd.id)
+        LEFT JOIN basic_position bp ON pci.bpid = bp.id
+        WHERE 1=1
+        AND pci.parent_id = '0'
+        <if test="name != null and name!=''" >
+            AND
+            pci.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="status != null and status!=''" >
+            AND
+            pci.status = #{status,jdbcType=TINYINT}
+        </if>
+        <if test="sTime != null and sTime!=''">
+            AND
+            pci.sTime &gt;= #{sTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="eTime != null and eTime!=''">
+            AND
+            pci.eTime &lt;= #{eTime,jdbcType=TIMESTAMP}
+        </if>
+        order by pci.create_time desc
+    </select>
+<!--selectById-->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        post_change_info pci
+        WHERE 1=1
+        AND pci.id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+
+
+
+>>>>>>> .theirs
 </mapper>

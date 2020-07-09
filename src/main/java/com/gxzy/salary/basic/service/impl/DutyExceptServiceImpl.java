@@ -87,6 +87,7 @@ public class DutyExceptServiceImpl implements DutyExceptService {
     // MGT新增异常考勤数据
     @Override
     public int addDutyExcept(DutyExcept record) {
+<<<<<<< .mine
         if(record.getId() == 0) {// 新增
             // 取当前系统时间
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
@@ -99,6 +100,20 @@ public class DutyExceptServiceImpl implements DutyExceptService {
             dutyExceptMapper.updateByPrimaryKeySelective(record);
         }
         return 0;
+=======
+        // 取当前系统时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        record.setCreateTime(df.format(new Date()));// new Date()为获取当前系统时间
+        record.setStatus(100);
+        record.setDescribe("待员工确认");
+        logger.info("addDutyExcept service"+record);
+        return dutyExceptMapper.insertSelective(record);
+
+
+
+
+
+>>>>>>> .theirs
     }
 
     @Transactional(readOnly=false,rollbackFor=Exception.class)
